@@ -1,0 +1,5 @@
+api/dependencies/**
+api/server/**
+api/main.go
+mocks/**
+pkg/config/**
