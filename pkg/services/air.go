@@ -1,24 +1,27 @@
 package services
 
 import (
-	"docker-go-project/pkg/config"
-	"errors"
+	"docker-go-project/pkg/repository"
 )
 
 type IAirService interface {
 	GetAirActual() (string, error)
 }
 
-type airService struct{}
+type airService struct {
+	repository repository.IRepository
+}
 
-func NewAirService() IAirService {
-	return &airService{}
+func NewAirService(repository repository.IRepository) IAirService {
+	return &airService{
+		repository: repository,
+	}
 }
 
 func (a *airService) GetAirActual() (string, error) {
-	sc := config.Get().UString("name")
-	if sc == "" {
-		return "", errors.New("air not found")
+	rs, err := a.repository.Get()
+	if err != nil {
+		return "", err
 	}
-	return sc, nil
+	return rs, nil
 }

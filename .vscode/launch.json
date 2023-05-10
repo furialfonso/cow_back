@@ -12,7 +12,7 @@
       "program": "${fileDirname}",
       "env": {
         "SCOPE": "local",
-        "PORT": "8083",
+        "PORT": "8080",
         "CONFIG_DIR": "${workspaceRoot}/pkg/config",
         "GIN_MODE":"release"
       }
