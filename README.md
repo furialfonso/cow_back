@@ -11,3 +11,7 @@ go tool cover -html=coverage.out
 # Correr tests para crear automaticamente
 
 mockery --all --disable-version-string
+
+# Notas
+
+Se agrega DB con configuracion por usuario test_R y test_W
