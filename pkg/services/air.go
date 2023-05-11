@@ -1,11 +1,12 @@
 package services
 
 import (
+	"context"
 	"docker-go-project/pkg/repository"
 )
 
 type IAirService interface {
-	GetAirActual() (string, error)
+	GetAirActual(ctx context.Context) (string, error)
 }
 
 type airService struct {
@@ -18,8 +19,8 @@ func NewAirService(repository repository.IRepository) IAirService {
 	}
 }
 
-func (a *airService) GetAirActual() (string, error) {
-	rs, err := a.repository.Get()
+func (a *airService) GetAirActual(ctx context.Context) (string, error) {
+	rs, err := a.repository.Get(ctx)
 	if err != nil {
 		return "", err
 	}

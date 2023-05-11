@@ -1,5 +1,7 @@
 package repository
 
+import "context"
+
 type IRepository interface {
-	Get() (string, error)
+	Get(ctx context.Context) (string, error)
 }

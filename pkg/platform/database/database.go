@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	sql2 "docker-go-project/pkg/platform/sql"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,21 +13,23 @@ type IDataBase interface {
 }
 
 type dataBase struct {
-	read  sql2.IRead
-	write sql2.IWrite
+	nameDB string
+	conR   *sql.DB
+	conW   *sql.DB
 }
 
 func NewDataBase(nameDB string) IDataBase {
 	return &dataBase{
-		read:  sql2.NewSqlRead(newConfigDB(nameDB, "R")),
-		write: sql2.NewSqlWrite(newConfigDB(nameDB, "W")),
+		nameDB: nameDB,
+		conR:   newConfigDB(nameDB, "R"),
+		conW:   newConfigDB(nameDB, "W"),
 	}
 }
 
 func (db *dataBase) GetRead() sql2.IRead {
-	return db.read
+	return sql2.NewSqlRead(db.conR)
 }
 
 func (db *dataBase) GetWrite() sql2.IWrite {
-	return db.write
+	return sql2.NewSqlWrite(db.conW)
 }

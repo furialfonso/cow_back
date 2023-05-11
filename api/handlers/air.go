@@ -22,7 +22,8 @@ func NewAirHandler(airService services.IAirService) IAirHandler {
 }
 
 func (h *airHandler) GetAir(c *gin.Context) {
-	res, err := h.airService.GetAirActual()
+	ctx := c.Request.Context()
+	res, err := h.airService.GetAirActual(ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"docker-go-project/pkg/config"
 	"fmt"
@@ -28,16 +29,16 @@ func newConfigDB(nameDB string, action string) *sql.DB {
 		schema:   config.Get().UString(fmt.Sprintf("%s.schema", nameDB)),
 	}
 	stream := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.user, config.password, config.host, config.port, config.schema)
-	db, err := sql.Open(driver, stream)
+	pool, err := sql.Open(driver, stream)
 	if err != nil {
 		panic(err)
 	}
-	err = db.Ping()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err = pool.PingContext(ctx)
 	if err != nil {
 		panic(err)
 	}
-	db.SetConnMaxLifetime(time.Minute * 3)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-	return db
+	return pool
 }

@@ -1,17 +1,48 @@
 # DockerGoProject
 
-# Correr test unitarios
+It is a 3-tier based architecture with dependency injection.
 
-export CONFIG_DIR=/Users/andortiz/Documents/GO/src/Examples/DockerGoProject/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
+**Author**
+  - *Andres Felipe Alfonso Ortiz*
 
-# Mirar resultado
+**Technologies**
+  - *Golang*: programming language.
+  - *Mysql*: data persistence.
+  - *Gin*: framework for rest applications.
+  - *Mokery*: automatic mocks for unit tests.
+  - *Dig*: automatic dependency injection.
 
-go tool cover -html=coverage.out
+**Run unit tests**
+```
+  export CONFIG_DIR=${workspaceRoot}/DockerGoProject/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
+```
 
-# Correr tests para crear automaticamente
+**Look result in html**
+```
+  go tool cover -html=coverage.out
+```
+**Gin**
+  - Documentation
+    - https://gin-gonic.com/docs/quickstart/
+**Mokery**
+  - Documentacion
+    - https://vektra.github.io/mockery/installation/#homebrew
+  - Instalacion mac
+    ```
+      brew install mockery
+    ```
+  - Crear mocks
+    ```
+      mockery --all --disable-version-string
+    ```
+**Dig**
+  - Documentation
+    - https://ruslan.rocks/posts/golang-dig
+    - https://www.golanglearn.com/golang-tutorials/golang-dig-a-better-way-to-manage-dependency/
 
-mockery --all --disable-version-string
-
-# Notas
-
-Se agrega DB con configuracion por usuario test_R y test_W
+**Mysql**
+  - Added DB with user configuration test_R and test_W.
+  - The Gpool is removed since it causes it to be slower and GO already manages the automatic pool of connections.
+    - https://koho.dev/understanding-go-and-databases-at-scale-connection-pooling-f301e56fa73
+  
+ 

@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 type mockHandler struct {
@@ -29,7 +30,7 @@ func Test_GetAir(t *testing.T) {
 			name: "errors",
 			mocks: airMocks{
 				airService: func(f *mockHandler) {
-					f.mockAirService.Mock.On("GetAirActual").Return("", errors.New("error searching air"))
+					f.mockAirService.Mock.On("GetAirActual", mock.Anything).Return("", errors.New("error searching air"))
 				},
 			},
 			expCode: http.StatusInternalServerError,
@@ -38,7 +39,7 @@ func Test_GetAir(t *testing.T) {
 			name: "full flow",
 			mocks: airMocks{
 				airService: func(f *mockHandler) {
-					f.mockAirService.Mock.On("GetAirActual").Return("local", nil)
+					f.mockAirService.Mock.On("GetAirActual", mock.Anything).Return("local", nil)
 				},
 			},
 			expCode: http.StatusOK,

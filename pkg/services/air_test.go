@@ -1,11 +1,13 @@
 package services
 
 import (
+	"context"
 	"docker-go-project/mocks"
 	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 type mockService struct {
@@ -27,7 +29,7 @@ func Test_GetAirActual(t *testing.T) {
 			name: "error flow",
 			mocks: airMocks{
 				service: func(f *mockService) {
-					f.repository.Mock.On("Get").Return("", errors.New("Error PAPI"))
+					f.repository.Mock.On("Get", mock.Anything).Return("", errors.New("Error PAPI"))
 				},
 			},
 			expErr: errors.New("Error PAPI"),
@@ -36,7 +38,7 @@ func Test_GetAirActual(t *testing.T) {
 			name: "full flow",
 			mocks: airMocks{
 				service: func(f *mockService) {
-					f.repository.Mock.On("Get").Return("Hi PAPI", nil)
+					f.repository.Mock.On("Get", mock.Anything).Return("Hi PAPI", nil)
 				},
 			},
 			airExp: "Hi PAPI",
@@ -49,7 +51,7 @@ func Test_GetAirActual(t *testing.T) {
 			}
 			tc.mocks.service(m)
 			service := NewAirService(m.repository)
-			air, err := service.GetAirActual()
+			air, err := service.GetAirActual(context.Background())
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)
 			}

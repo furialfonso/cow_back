@@ -15,8 +15,8 @@ func NewRepository(dataBase database.IDataBase) IRepository {
 	}
 }
 
-func (r *repository) Get() (string, error) {
-	rs, err := r.dataBase.GetRead().QueryContext(context.Background(), "select 'hi bb' text")
+func (r *repository) Get(ctx context.Context) (string, error) {
+	rs, err := r.dataBase.GetRead().QueryContext(ctx, "select 'hi bb' text")
 	if err != nil {
 		return "", err
 	}
