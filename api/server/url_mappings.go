@@ -7,19 +7,21 @@ import (
 )
 
 type Router struct {
-	pingHandler handlers.IPingHandler
-	airHandler  handlers.IAirHandler
+	pingHandler  handlers.IPingHandler
+	groupHandler handlers.IGroupHandler
 }
 
 func NewRouter(pingHandler handlers.IPingHandler,
-	airHandler handlers.IAirHandler) *Router {
+	groupHandler handlers.IGroupHandler) *Router {
 	return &Router{
 		pingHandler,
-		airHandler,
+		groupHandler,
 	}
 }
 
 func (r Router) Resource(gin *gin.Engine) {
 	gin.GET("/ping", r.pingHandler.Ping)
-	gin.GET("/get-air", r.airHandler.GetAir)
+	gin.POST("/create-group", r.groupHandler.Create)
+	gin.GET("/groups", r.groupHandler.GetGroups)
+	gin.GET("/group/:code", r.groupHandler.GetGroupByCode)
 }

@@ -3,3 +3,4 @@ api/server/**
 api/main.go
 mocks/**
 pkg/config/**
+pkg/platform/**

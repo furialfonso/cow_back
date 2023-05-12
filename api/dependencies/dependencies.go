@@ -22,8 +22,8 @@ func BuildDependencies() *dig.Container {
 	})
 	_ = Container.Provide(repository.NewRepository)
 	_ = Container.Provide(handlers.NewHandlerPing)
-	_ = Container.Provide(handlers.NewAirHandler)
-	_ = Container.Provide(services.NewAirService)
+	_ = Container.Provide(handlers.NewGroupHandler)
+	_ = Container.Provide(services.NewGroupService)
 
 	return Container
 }

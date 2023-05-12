@@ -1,7 +1,7 @@
 name: LOCAL
 mysql-test:
-  username: test
-  password: Admin123.
+  username: andre
+  password: Admin123
   hostname: localhost
   port: 3306
-  schema: holidaytst
+  schema: cow_db
