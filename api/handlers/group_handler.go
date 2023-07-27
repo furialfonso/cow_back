@@ -38,7 +38,10 @@ func (h *groupHandler) Create(c *gin.Context) {
 	}
 	err := h.groupService.CreateGroup(ctx, groupDTO)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, response.ApiErrors{
+			Code:    http.StatusInternalServerError,
+			Message: fmt.Sprintf("error creating group %s", groupDTO.Code),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, fmt.Sprintf("group %s created", groupDTO.Code))
@@ -48,7 +51,10 @@ func (h *groupHandler) GetGroups(c *gin.Context) {
 	ctx := c.Request.Context()
 	groups, err := h.groupService.GetGroups(ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, response.ApiErrors{
+			Code:    http.StatusInternalServerError,
+			Message: "error getting groups",
+		})
 		return
 	}
 	c.JSON(http.StatusOK, groups)
@@ -58,13 +64,19 @@ func (h *groupHandler) GetGroupByCode(c *gin.Context) {
 	ctx := c.Request.Context()
 	code, exists := c.Params.Get("code")
 	if !exists {
-		c.JSON(http.StatusBadRequest, "grop's code is required")
+		c.JSON(http.StatusBadRequest, response.ApiErrors{
+			Code:    http.StatusBadRequest,
+			Message: "grop's code is required",
+		})
 		return
 	}
 
 	group, err := h.groupService.GetGroupByCode(ctx, code)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusInternalServerError, response.ApiErrors{
+			Code:    http.StatusInternalServerError,
+			Message: fmt.Sprintf("error getting group %s", code),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, group)

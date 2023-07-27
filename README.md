@@ -44,5 +44,16 @@ It is a 3-tier based architecture with dependency injection.
   - Added DB with user configuration test_R and test_W.
   - The Gpool is removed since it causes it to be slower and GO already manages the automatic pool of connections.
     - https://koho.dev/understanding-go-and-databases-at-scale-connection-pooling-f301e56fa73
-  
- 
+
+**Docker**
+  - Commands for containerized database
+  ```
+    docker container run \
+      -dp 3306:3306 \
+      --name cow_db \
+      --env MARIADB_USER=andre \
+      --env MARIADB_PASSWORD=Admin123 \
+      --env MARIADB_ROOT_PASSWORD=Admin123 \
+      --env MARIADB_DATABASE=cow_db \
+      mariadb:jammy
+  ```

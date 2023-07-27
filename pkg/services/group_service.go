@@ -12,7 +12,7 @@ type IGroupService interface {
 	GetGroups(ctx context.Context) ([]response.GroupResponse, error)
 	GetGroupByCode(ctx context.Context, code string) (response.GroupResponse, error)
 	CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error
-	UpdateDebtByName(ctx context.Context, groupDTO request.GroupDTO) error
+	UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error
 }
 
 type groupService struct {
@@ -57,7 +57,7 @@ func (gs *groupService) CreateGroup(ctx context.Context, groupDTO request.GroupD
 	return nil
 }
 
-func (gs *groupService) UpdateDebtByName(ctx context.Context, groupDTO request.GroupDTO) error {
+func (gs *groupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error {
 	err := gs.groupRepository.UpdateGroupDebtByCode(ctx, model.Group{
 		Code: groupDTO.Code,
 		Debt: groupDTO.Debt,
