@@ -1,0 +1,22 @@
+-- Active: 1690563698578@@127.0.0.1@3306@cow_db
+select unique a.nick_name,
+	   a.debt total_gastado,
+       a.total_a_pagar,
+       a.payments pagos_realizados,
+       if((a.payments - a.total_a_pagar)>0,0,(a.payments - a.total_a_pagar))deuda
+from(select a.code,
+	   a.debt,
+       a.debt/2 total_a_pagar,
+       c.nick_name,
+       d.description,
+       d.value,
+       d.created_at,
+       sum(d.value)over(partition by c.nick_name)payments
+from cow_db.group a,
+     cow_db.team b,
+     cow_db.user c,
+     cow_db.pay d
+where d.team_id = b.id
+and c.id = b.user_id
+and b.group_id = a.id
+and a.code = 'you&I')a;
