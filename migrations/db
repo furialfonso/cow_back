@@ -1,4 +1,4 @@
--- Active: 1690562390463@@127.0.0.1@3306@cow_db
+-- Active: 1690563698578@@127.0.0.1@3306@cow_db
 CREATE TABLE IF NOT EXISTS `cow_db`.`group` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(100) NOT NULL,
@@ -57,3 +57,9 @@ CREATE TABLE IF NOT EXISTS `cow_db`.`pay` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE USER 'andre_R'@'%' IDENTIFIED BY 'Admin123';
+CREATE USER 'andre_W'@'%' IDENTIFIED BY 'Admin123';
+
+GRANT ALL PRIVILEGES ON * . * TO 'andre_R'@'%';
+GRANT ALL PRIVILEGES ON * . * TO 'andre_W'@'%';
