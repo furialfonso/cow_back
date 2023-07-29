@@ -1,27 +1,52 @@
-# version: '3.4'
-
+version: '3.4'
 services:
   db:
-    container_name: cow_db
+    container_name: ${APPLICATION_NAME}_${SCOPE}_db
     image: mariadb:jammy
     volumes:
-      - cow_vol:/var/lib/mysql
+      - ${APPLICATION_NAME}_${SCOPE}_vol:/var/lib/mysql
     environment:
-      - MARIADB_USER=andre
-      - MARIADB_PASSWORD=Admin123
-      - MARIADB_ROOT_PASSWORD=Admin123
-      - MARIADB_DATABASE=cow_db
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${APPLICATION_NAME}_${SCOPE}_db
     ports:
-      - "3306:3306"
-
+      - 3306:3306
+    networks:
+      - ${APPLICATION_NAME}_${SCOPE}_network
+    restart: always
+  api:
+    depends_on:
+      - db
+    container_name: ${APPLICATION_NAME}_${SCOPE}_api
+    image: ${APPLICATION_NAME}_project:latest
+    environment:
+      CONFIG_DIR: /app/pkg/config
+      SCOPE: ${SCOPE}
+      PORT: 8080
+      GIN_MODE: release
+      HOST_DB: ${APPLICATION_NAME}_${SCOPE}_db
+      USER_DB: ${DB_USER}
+      PASSWORD_DB: ${DB_PASSWORD}
+      PORT_DB: ${DB_PORT}
+      SCHEMA_DB: ${APPLICATION_NAME}_${SCOPE}_db
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - ${APPLICATION_NAME}_${SCOPE}_network
+    restart: always
 volumes:
-  cow_vol:
+  cow_local_vol:
     external: true
-    
-#   dockergoproject:
-#     image: dockergoproject
-#     build:
-#       context: .
-#       dockerfile: ./Dockerfile
-#     ports:
-#       - 8080:8080
+  cow_test_vol:
+    external: true
+  cow_prod_vol:
+    external: true
+networks:
+  cow_local_network:
+    external: true
+  cow_test_network:
+    external: true
+  cow_prod_network:
+    external: true

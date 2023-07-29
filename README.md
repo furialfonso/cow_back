@@ -11,19 +11,21 @@ It is a 3-tier based architecture with dependency injection.
   - *Gin*: framework for rest applications.
   - *Mokery*: automatic mocks for unit tests.
   - *Dig*: automatic dependency injection.
+  - *Docker*: application's contenerization
 
 **Run unit tests**
-```
-  export CONFIG_DIR=${workspaceRoot}/DockerGoProject/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
-```
-
-**Look result in html**
-```
-  go tool cover -html=coverage.out
-```
+  - execute tests
+  ```
+    export CONFIG_DIR=${workspaceRoot}/DockerGoProject/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
+  ```
+  - Look result in html
+  ```
+    go tool cover -html=coverage.out
+  ```
 **Gin**
   - Documentation
     - https://gin-gonic.com/docs/quickstart/
+
 **Mokery**
   - Documentacion
     - https://vektra.github.io/mockery/installation/#homebrew
@@ -46,7 +48,30 @@ It is a 3-tier based architecture with dependency injection.
     - https://koho.dev/understanding-go-and-databases-at-scale-connection-pooling-f301e56fa73
 
 **Start Aplication**
+  - Requeriments
+  ```
+    docker volume create cow_{scope}_vol
+    docker network create cow_{scope}_network
+  ```
   - Execute the next command for start the application.
   ```
     docker-compose up -d
   ```
+**Config project**
+  - For unit test
+  ```
+    "go.testEnvVars": {
+          "CONFIG_DIR": "${workspaceRoot}/pkg/config",
+          "SCOPE":"local"
+      },
+  ```
+  - Environment vs-code
+  ```
+    "SCOPE": "local",
+    "PORT": "8080",
+    "CONFIG_DIR": "${workspaceRoot}/pkg/config",
+    "GIN_MODE":"release"
+  ```
+
+**Utils**
+- https://www.youtube.com/watch?v=Ms5RKs8TNU4&t=1504s

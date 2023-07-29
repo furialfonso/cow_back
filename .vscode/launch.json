@@ -14,7 +14,13 @@
         "SCOPE": "local",
         "PORT": "8080",
         "CONFIG_DIR": "${workspaceRoot}/pkg/config",
-        "GIN_MODE":"release"
+        "GIN_MODE":"release",
+        //config db
+        "USER_DB":"andre",
+        "PASSWORD_DB":"Admin123",
+        "PORT_DB":"3306",
+        "HOST_DB":"localhost",
+        "SCHEMA_DB":"cow_local_db"
       }
     }
   ]
