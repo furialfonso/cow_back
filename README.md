@@ -70,7 +70,13 @@ It is a 3-tier based architecture with dependency injection.
     "SCOPE": "local",
     "PORT": "8080",
     "CONFIG_DIR": "${workspaceRoot}/pkg/config",
-    "GIN_MODE":"release"
+    "GIN_MODE":"release",
+    //config db
+    "USER_DB":"",
+    "PASSWORD_DB":"",
+    "PORT_DB":"",
+    "HOST_DB":"",
+    "SCHEMA_DB":""
   ```
 
 **Utils**
