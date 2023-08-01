@@ -1,4 +1,4 @@
-FROM golang:1.20.4-alpine3.18 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.20.6-alpine3.18 AS builder
 
 RUN apk add --no-cache git upx
 
@@ -26,5 +26,6 @@ WORKDIR /app
 COPY --from=builder /app .
 
 ENTRYPOINT [ "./main" ]
-# docker build . -t app-pro:v1
+# docker build -t furialfonso/cow_project:latest .
+# docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t furialfonso/cow_project:latest --push .
 # docker run -e PORT=9000 -p 8080:8080 app-pro:v1

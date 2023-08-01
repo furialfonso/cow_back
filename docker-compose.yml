@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     container_name: ${APPLICATION_NAME}_${SCOPE}_api
-    image: ${APPLICATION_NAME}_project:latest
+    image: ${REPOSITORY}/${APPLICATION_NAME}_project:latest
     environment:
       CONFIG_DIR: /app/pkg/config
       SCOPE: ${SCOPE}
