@@ -9,7 +9,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${APPLICATION_NAME}_${SCOPE}_db
     ports:
-      - 3306:3306
+      - ${DB_PORT}:${DB_PORT}
     networks:
       - ${APPLICATION_NAME}_${SCOPE}_network
     restart: always
@@ -17,22 +17,17 @@ services:
     depends_on:
       - db
     container_name: ${APPLICATION_NAME}_${SCOPE}_api
-    image: ${REPOSITORY}/${APPLICATION_NAME}_project:latest
+    image: ${REPOSITORY}/${APPLICATION_NAME}_project:${SCOPE}
     environment:
-      CONFIG_DIR: /app/pkg/config
+      CONFIG_DIR: /app
       SCOPE: ${SCOPE}
-      PORT: 8080
+      PORT: ${APP_PORT}
       GIN_MODE: release
-      HOST_DB: ${APPLICATION_NAME}_${SCOPE}_db
-      USER_DB: ${DB_USER}
-      PASSWORD_DB: ${DB_PASSWORD}
-      PORT_DB: ${DB_PORT}
-      SCHEMA_DB: ${APPLICATION_NAME}_${SCOPE}_db
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - ${APP_PORT}:${APP_PORT}
     networks:
       - ${APPLICATION_NAME}_${SCOPE}_network
     restart: always

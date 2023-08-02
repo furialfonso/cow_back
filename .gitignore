@@ -1,3 +1,5 @@
 api/__debug_bin
 coverage.out
 api/app
+.covignore
+coverage.out

@@ -3,9 +3,11 @@ package database
 import (
 	"context"
 	"database/sql"
+	"docker-go-project/pkg/config"
 	"fmt"
-	"os"
 	"time"
+
+	"github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -21,15 +23,17 @@ type configDB struct {
 }
 
 func newConfigDB(nameDB string, action string) *sql.DB {
-	config := configDB{
-		user:     fmt.Sprintf("%s_%s", os.Getenv("USER_DB"), action),
-		password: os.Getenv("PASSWORD_DB"),
-		host:     os.Getenv("HOST_DB"),
-		port:     os.Getenv("PORT_DB"),
-		schema:   os.Getenv("SCHEMA_DB"),
+	cfg := mysql.Config{
+		User:   fmt.Sprintf("%s_%s", config.Get().UString(fmt.Sprintf("%s.user", nameDB)), action),
+		Passwd: config.Get().UString(fmt.Sprintf("%s.password", nameDB)),
+		Net:    "tcp",
+		Addr: fmt.Sprintf("%s:%s", config.Get().UString(fmt.Sprintf("%s.host", nameDB)),
+			config.Get().UString(fmt.Sprintf("%s.port", nameDB))),
+		DBName:               config.Get().UString(fmt.Sprintf("%s.schema", nameDB)),
+		AllowNativePasswords: true,
 	}
-	stream := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.user, config.password, config.host, config.port, config.schema)
-	pool, err := sql.Open(driver, stream)
+	pool, err := sql.Open(driver, cfg.FormatDSN())
+
 	if err != nil {
 		panic(err)
 	}

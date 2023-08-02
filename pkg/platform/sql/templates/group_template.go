@@ -6,7 +6,7 @@ var (
 						code,
 						debt,
 						created_at
-			from cow_local_db.group;
+			from c_group;
 	`
 
 	GetGroupByCode = `
@@ -14,16 +14,16 @@ var (
 						code,
 						debt,
 						created_at
-			from cow_local_db.group
+			from c_group
 			where code = ?;
 	`
 
 	CreateGroup = `
-		insert into cow_local_db.group(code)values(?)
+		insert into c_group(code)values(?)
 	`
 
 	UpdateGroup = `
-		update cow_local_db.group 
+		update c_group 
 		set debt = ?
 		where code = ?
 	`

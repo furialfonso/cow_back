@@ -1,5 +1,6 @@
--- Active: 1690574241490@@127.0.0.1@3306@cow_local_db
-CREATE TABLE IF NOT EXISTS `cow_local_db`.`group` (
+-- Active: 1690926103729@@localhost@3307@cow_test_db
+use cow_test_db;
+CREATE TABLE IF NOT EXISTS `c_group` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(100) NOT NULL,
   `debt` INT NOT NULL DEFAULT 0,
@@ -8,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `cow_local_db`.`group` (
   UNIQUE INDEX `group_uk` (`code` ASC) VISIBLE)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `cow_local_db`.`user` (
+CREATE TABLE IF NOT EXISTS `c_user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `second_name` VARCHAR(45) NULL,
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `cow_local_db`.`user` (
   UNIQUE INDEX `user_uk2` (`nick_name` ASC) VISIBLE)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `cow_local_db`.`team` (
+CREATE TABLE IF NOT EXISTS `c_team` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `group_id` INT NOT NULL,
   `user_id` INT NOT NULL,
@@ -32,17 +33,17 @@ CREATE TABLE IF NOT EXISTS `cow_local_db`.`team` (
   INDEX `fk_team_user1_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_team_group1`
     FOREIGN KEY (`group_id`)
-    REFERENCES `cow_local_db`.`group` (`id`)
+    REFERENCES `c_group` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_team_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `cow_local_db`.`user` (`id`)
+    REFERENCES `c_user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `cow_local_db`.`pay` (
+CREATE TABLE IF NOT EXISTS `c_pay` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `team_id` INT NOT NULL,
   `description` VARCHAR(200) NOT NULL,
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `cow_local_db`.`pay` (
   INDEX `fk_pay_team1_idx` (`team_id` ASC) VISIBLE,
   CONSTRAINT `fk_pay_team1`
     FOREIGN KEY (`team_id`)
-    REFERENCES `cow_local_db`.`team` (`id`)
+    REFERENCES `c_team` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

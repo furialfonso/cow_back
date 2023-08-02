@@ -1,4 +1,5 @@
--- Active: 1690563698578@@127.0.0.1@3306@cow_db
+-- Active: 1690926103729@@localhost@3307@cow_test_db
+use cow_test_db;
 select unique a.nick_name,
 	   a.debt total_gastado,
        a.total_a_pagar,
@@ -12,10 +13,10 @@ from(select a.code,
        d.value,
        d.created_at,
        sum(d.value)over(partition by c.nick_name)payments
-from cow_db.group a,
-     cow_db.team b,
-     cow_db.user c,
-     cow_db.pay d
+from c_group a,
+     c_team b,
+     c_user c,
+     c_pay d
 where d.team_id = b.id
 and c.id = b.user_id
 and b.group_id = a.id

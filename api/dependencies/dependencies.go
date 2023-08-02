@@ -18,7 +18,7 @@ func BuildDependencies() *dig.Container {
 	_ = Container.Provide(server.New)
 	_ = Container.Provide(server.NewRouter)
 	_ = Container.Provide(func() database.IDataBase {
-		return database.NewDataBase("mysql-test")
+		return database.NewDataBase("mysql")
 	})
 	_ = Container.Provide(repository.NewRepository)
 	_ = Container.Provide(handlers.NewHandlerPing)
