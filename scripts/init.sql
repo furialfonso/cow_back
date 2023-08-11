@@ -1,5 +1,3 @@
--- Active: 1690926103729@@localhost@3307@cow_test_db
-use cow_test_db;
 insert into c_group (code,debt)values('you&I',0);
 insert into c_user(name,second_name,last_name,second_last_name,email,nick_name)values('Andres','Felipe','Alfonso','Ortiz','afelipealfonso@gmail.com','furialfonso');
 insert into c_user(name,second_name,last_name,second_last_name,email,nick_name)values('Johanna','Lorena','Marquez','Torres','jolomato@gmail.com','joha');

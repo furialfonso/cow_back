@@ -1,6 +1,6 @@
 name: TEST
 mysql:
-  user: andre
+  user: cow
   password: Admin123
   port: 3306
   host: cow_test_db

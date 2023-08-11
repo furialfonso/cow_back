@@ -4,18 +4,22 @@ services:
     container_name: ${APPLICATION_NAME}_${SCOPE}_db
     image: mariadb:jammy
     volumes:
-      - ${APPLICATION_NAME}_${SCOPE}_vol:/var/lib/mysql
+      - ./scripts/db.sql:/docker-entrypoint-initdb.d/db.sql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${APPLICATION_NAME}_${SCOPE}_db
     ports:
       - ${DB_PORT}:${DB_PORT}
-    networks:
-      - ${APPLICATION_NAME}_${SCOPE}_network
     restart: always
+    healthcheck:
+      test: "mariadb --host=localhost --user=${APPLICATION_NAME}_R --password=${DB_ROOT_PASSWORD} -e 'SELECT 1;'"
+      interval: 1s
+      retries: 120
   api:
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     container_name: ${APPLICATION_NAME}_${SCOPE}_api
     image: ${REPOSITORY}/${APPLICATION_NAME}_project:${SCOPE}
     environment:
@@ -28,20 +32,4 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - ${APP_PORT}:${APP_PORT}
-    networks:
-      - ${APPLICATION_NAME}_${SCOPE}_network
     restart: always
-volumes:
-  cow_local_vol:
-    external: true
-  cow_test_vol:
-    external: true
-  cow_prod_vol:
-    external: true
-networks:
-  cow_local_network:
-    external: true
-  cow_test_network:
-    external: true
-  cow_prod_network:
-    external: true

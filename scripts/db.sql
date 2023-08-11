@@ -1,5 +1,7 @@
--- Active: 1690926103729@@localhost@3307@cow_test_db
-use cow_test_db;
+CREATE USER 'cow_R'@'%' IDENTIFIED BY 'Admin123';
+CREATE USER 'cow_W'@'%' IDENTIFIED BY 'Admin123';
+GRANT ALL PRIVILEGES ON * . * TO 'cow_R'@'%';
+GRANT ALL PRIVILEGES ON * . * TO 'cow_W'@'%';
 CREATE TABLE IF NOT EXISTS `c_group` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(100) NOT NULL,
@@ -8,7 +10,6 @@ CREATE TABLE IF NOT EXISTS `c_group` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `group_uk` (`code` ASC) VISIBLE)
 ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `c_user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -22,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `c_user` (
   UNIQUE INDEX `user_uk1` (`email` ASC) VISIBLE,
   UNIQUE INDEX `user_uk2` (`nick_name` ASC) VISIBLE)
 ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `c_team` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `group_id` INT NOT NULL,
@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `c_team` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `c_pay` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `team_id` INT NOT NULL,
@@ -58,9 +57,3 @@ CREATE TABLE IF NOT EXISTS `c_pay` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE USER 'andre_R'@'%' IDENTIFIED BY 'Admin123';
-CREATE USER 'andre_W'@'%' IDENTIFIED BY 'Admin123';
-
-GRANT ALL PRIVILEGES ON * . * TO 'andre_R'@'%';
-GRANT ALL PRIVILEGES ON * . * TO 'andre_W'@'%';
