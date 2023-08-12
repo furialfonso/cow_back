@@ -29,6 +29,8 @@ services:
       GIN_MODE: release
     build:
       context: .
+      args:
+        - SCOPE=${SCOPE}
       dockerfile: ./Dockerfile
     ports:
       - ${APP_PORT}:${APP_PORT}

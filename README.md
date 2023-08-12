@@ -28,7 +28,7 @@ It is a 3-tier based architecture with dependency injection.
 
 **Mokery**
   - Documentacion
-    - https://vektra.github.io/mockery/installation/#homebrew
+    - https://vektra.github.io/mockery/latest/
   - Instalacion mac
     ```
       brew install mockery
@@ -48,11 +48,6 @@ It is a 3-tier based architecture with dependency injection.
     - https://koho.dev/understanding-go-and-databases-at-scale-connection-pooling-f301e56fa73
 
 **Start Aplication**
-  - Requeriments
-  ```
-    docker volume create cow_{scope}_vol
-    docker network create cow_{scope}_network
-  ```
   - Execute the next command for start the application.
   ```
     docker-compose up -d
@@ -71,12 +66,6 @@ It is a 3-tier based architecture with dependency injection.
     "PORT": "8080",
     "CONFIG_DIR": "${workspaceRoot}/pkg/config",
     "GIN_MODE":"release",
-    //config db
-    "USER_DB":"",
-    "PASSWORD_DB":"",
-    "PORT_DB":"",
-    "HOST_DB":"",
-    "SCHEMA_DB":""
   ```
 
 **Utils**
