@@ -22,6 +22,11 @@ var (
 		insert into c_group(code)values(?)
 	`
 
+	DeleteGroup = `
+		delete from c_group
+		where code = ?;
+	`
+
 	UpdateGroup = `
 		update c_group 
 		set debt = ?

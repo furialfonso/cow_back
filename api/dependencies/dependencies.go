@@ -2,6 +2,8 @@ package dependencies
 
 import (
 	"docker-go-project/api/handlers"
+	groupHandler "docker-go-project/api/handlers/group"
+	userHandler "docker-go-project/api/handlers/user"
 	"docker-go-project/api/server"
 	"docker-go-project/pkg/platform/database"
 	"docker-go-project/pkg/repository"
@@ -22,8 +24,9 @@ func BuildDependencies() *dig.Container {
 	})
 	_ = Container.Provide(repository.NewRepository)
 	_ = Container.Provide(handlers.NewHandlerPing)
-	_ = Container.Provide(handlers.NewGroupHandler)
+	_ = Container.Provide(groupHandler.NewGroupHandler)
 	_ = Container.Provide(services.NewGroupService)
+	_ = Container.Provide(userHandler.NewUserHandler)
 
 	return Container
 }

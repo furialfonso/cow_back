@@ -3,5 +3,5 @@ mysql:
   user: cow
   password: Admin123
   port: 3306
-  host: cow_local_db
+  host: localhost
   schema: cow_local_db

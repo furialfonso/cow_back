@@ -29,9 +29,14 @@ It is a 3-tier based architecture with dependency injection.
 **Mokery**
   - Documentacion
     - https://vektra.github.io/mockery/latest/
-  - Instalacion mac
+  - Instalacion 
+    - mac
     ```
       brew install mockery
+    ```
+    - windows
+    ```
+    docker run -v $PWD:/src -w /src vektra/mockery --all
     ```
   - Crear mocks
     ```

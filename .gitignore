@@ -3,3 +3,4 @@ coverage.out
 api/app
 .covignore
 coverage.out
+api/__debug_bin.exe

@@ -2,26 +2,43 @@ package server
 
 import (
 	"docker-go-project/api/handlers"
+	groupHandler "docker-go-project/api/handlers/group"
+	userHandler "docker-go-project/api/handlers/user"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Router struct {
 	pingHandler  handlers.IPingHandler
-	groupHandler handlers.IGroupHandler
+	groupHandler groupHandler.IGroupHandler
+	userHandler  userHandler.IUserHandler
 }
 
 func NewRouter(pingHandler handlers.IPingHandler,
-	groupHandler handlers.IGroupHandler) *Router {
+	groupHandler groupHandler.IGroupHandler,
+	userHandler userHandler.IUserHandler) *Router {
 	return &Router{
 		pingHandler,
 		groupHandler,
+		userHandler,
 	}
 }
 
 func (r Router) Resource(gin *gin.Engine) {
 	gin.GET("/ping", r.pingHandler.Ping)
-	gin.POST("/create-group", r.groupHandler.Create)
-	gin.GET("/groups", r.groupHandler.GetGroups)
-	gin.GET("/group/:code", r.groupHandler.GetGroupByCode)
+	group := gin.Group("/groups")
+	{
+		group.GET("", r.groupHandler.GetGroups)
+		group.GET("/:code", r.groupHandler.GetGroupByCode)
+		group.POST("", r.groupHandler.Create)
+		group.DELETE("/:code", r.groupHandler.Delete)
+	}
+
+	user := gin.Group("/users")
+	{
+		user.GET("", r.userHandler.GetUsers)
+		user.GET("/:code", r.userHandler.GetUserByCode)
+		user.POST("", r.userHandler.Create)
+		user.DELETE("/:code", r.userHandler.Delete)
+	}
 }

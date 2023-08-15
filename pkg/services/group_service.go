@@ -12,6 +12,7 @@ type IGroupService interface {
 	GetGroups(ctx context.Context) ([]response.GroupResponse, error)
 	GetGroupByCode(ctx context.Context, code string) (response.GroupResponse, error)
 	CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error
+	DeleteGroup(ctx context.Context, code string) error
 	UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error
 }
 
@@ -51,6 +52,14 @@ func (gs *groupService) GetGroupByCode(ctx context.Context, code string) (respon
 
 func (gs *groupService) CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error {
 	_, err := gs.groupRepository.Create(ctx, groupDTO.Code)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (gs *groupService) DeleteGroup(ctx context.Context, code string) error {
+	err := gs.groupRepository.Delete(ctx, code)
 	if err != nil {
 		return err
 	}

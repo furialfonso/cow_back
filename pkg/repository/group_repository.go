@@ -12,6 +12,7 @@ type IGroupRepository interface {
 	GetGroupByCode(ctx context.Context, code string) (model.Group, error)
 	GetGroups(ctx context.Context) ([]model.Group, error)
 	Create(ctx context.Context, code string) (int64, error)
+	Delete(ctx context.Context, code string) error
 	UpdateGroupDebtByCode(ctx context.Context, group model.Group) error
 }
 
@@ -77,6 +78,14 @@ func (gr *groupRepository) Create(ctx context.Context, code string) (int64, erro
 		return 0, err
 	}
 	return id, nil
+}
+
+func (gr *groupRepository) Delete(ctx context.Context, code string) error {
+	_, err := gr.db.GetWrite().ExecuteContext(ctx, templates.DeleteGroup, code)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (gr *groupRepository) UpdateGroupDebtByCode(ctx context.Context, group model.Group) error {
