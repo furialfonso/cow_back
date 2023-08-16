@@ -18,11 +18,11 @@ type IGroupService struct {
 }
 
 // Create provides a mock function with given fields: ctx, groupDTO
-func (_m *IGroupService) Create(ctx context.Context, groupDTO request.GroupDTO) error {
+func (_m *IGroupService) Create(ctx context.Context, groupDTO request.GroupRequest) error {
 	ret := _m.Called(ctx, groupDTO)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, request.GroupDTO) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, request.GroupRequest) error); ok {
 		r0 = rf(ctx, groupDTO)
 	} else {
 		r0 = ret.Error(0)
@@ -96,11 +96,11 @@ func (_m *IGroupService) GetByCode(ctx context.Context, code string) (response.G
 }
 
 // UpdateDebtByCode provides a mock function with given fields: ctx, groupDTO
-func (_m *IGroupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error {
+func (_m *IGroupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupRequest) error {
 	ret := _m.Called(ctx, groupDTO)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, request.GroupDTO) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, request.GroupRequest) error); ok {
 		r0 = rf(ctx, groupDTO)
 	} else {
 		r0 = ret.Error(0)

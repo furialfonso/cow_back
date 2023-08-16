@@ -10,9 +10,9 @@ import (
 type IGroupService interface {
 	GetAll(ctx context.Context) ([]response.GroupResponse, error)
 	GetByCode(ctx context.Context, code string) (response.GroupResponse, error)
-	Create(ctx context.Context, groupDTO request.GroupDTO) error
+	Create(ctx context.Context, groupDTO request.GroupRequest) error
 	Delete(ctx context.Context, code string) error
-	UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error
+	UpdateDebtByCode(ctx context.Context, groupDTO request.GroupRequest) error
 }
 
 type groupService struct {
@@ -49,7 +49,7 @@ func (gs *groupService) GetByCode(ctx context.Context, code string) (response.Gr
 	return groupResponse, nil
 }
 
-func (gs *groupService) Create(ctx context.Context, groupDTO request.GroupDTO) error {
+func (gs *groupService) Create(ctx context.Context, groupDTO request.GroupRequest) error {
 	_, err := gs.groupRepository.Create(ctx, groupDTO.Code)
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ func (gs *groupService) Delete(ctx context.Context, code string) error {
 	return nil
 }
 
-func (gs *groupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error {
+func (gs *groupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupRequest) error {
 	err := gs.groupRepository.UpdateDebtByCode(ctx, group.Group{
 		Code: groupDTO.Code,
 		Debt: groupDTO.Debt,

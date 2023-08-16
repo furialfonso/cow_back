@@ -36,8 +36,8 @@ func (r Router) Resource(gin *gin.Engine) {
 
 	user := gin.Group("/users")
 	{
-		user.GET("", r.userHandler.GetUsers)
-		user.GET("/:code", r.userHandler.GetUserByCode)
+		user.GET("", r.userHandler.GetAll)
+		user.GET("/:code", r.userHandler.GetByNickName)
 		user.POST("", r.userHandler.Create)
 		user.DELETE("/:code", r.userHandler.Delete)
 	}

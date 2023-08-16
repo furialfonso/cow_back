@@ -22,13 +22,13 @@ func (_m *IUserHandler) Delete(c *gin.Context) {
 	_m.Called(c)
 }
 
-// GetUserByCode provides a mock function with given fields: c
-func (_m *IUserHandler) GetUserByCode(c *gin.Context) {
+// GetAll provides a mock function with given fields: c
+func (_m *IUserHandler) GetAll(c *gin.Context) {
 	_m.Called(c)
 }
 
-// GetUsers provides a mock function with given fields: c
-func (_m *IUserHandler) GetUsers(c *gin.Context) {
+// GetByNickName provides a mock function with given fields: c
+func (_m *IUserHandler) GetByNickName(c *gin.Context) {
 	_m.Called(c)
 }
 

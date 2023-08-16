@@ -148,12 +148,12 @@ func Test_Create(t *testing.T) {
 		},
 		{
 			name: "error creating group",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "test1",
 			},
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("Create", mock.Anything, request.GroupDTO{
+					f.groupService.Mock.On("Create", mock.Anything, request.GroupRequest{
 						Code: "test1",
 					}).Return(errors.New("error x"))
 				},
@@ -162,12 +162,12 @@ func Test_Create(t *testing.T) {
 		},
 		{
 			name: "full flow",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "test1",
 			},
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("Create", mock.Anything, request.GroupDTO{
+					f.groupService.Mock.On("Create", mock.Anything, request.GroupRequest{
 						Code: "test1",
 					}).Return(nil)
 				},

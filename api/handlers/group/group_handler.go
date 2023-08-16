@@ -64,23 +64,23 @@ func (gh *groupHandler) GetByCode(c *gin.Context) {
 
 func (gh *groupHandler) Create(c *gin.Context) {
 	ctx := c.Request.Context()
-	var groupDTO request.GroupDTO
-	if err := c.BindJSON(&groupDTO); err != nil {
+	var groupRequest request.GroupRequest
+	if err := c.BindJSON(&groupRequest); err != nil {
 		c.JSON(http.StatusBadRequest, response.ApiErrors{
 			Code:    http.StatusBadRequest,
 			Message: "invalid format",
 		})
 		return
 	}
-	err := gh.groupService.Create(ctx, groupDTO)
+	err := gh.groupService.Create(ctx, groupRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ApiErrors{
 			Code:    http.StatusInternalServerError,
-			Message: fmt.Sprintf("error creating group %s", groupDTO.Code),
+			Message: fmt.Sprintf("error creating group %s", groupRequest.Code),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, fmt.Sprintf("group %s created", groupDTO.Code))
+	c.JSON(http.StatusOK, fmt.Sprintf("group %s created", groupRequest.Code))
 }
 
 func (gh *groupHandler) Delete(c *gin.Context) {

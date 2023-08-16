@@ -138,13 +138,13 @@ func Test_GetByCode(t *testing.T) {
 func Test_Create(t *testing.T) {
 	tests := []struct {
 		name   string
-		input  request.GroupDTO
+		input  request.GroupRequest
 		mocks  groupMocks
 		expErr error
 	}{
 		{
 			name: "error",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "Test1",
 			},
 			mocks: groupMocks{
@@ -156,7 +156,7 @@ func Test_Create(t *testing.T) {
 		},
 		{
 			name: "full flow",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "Test1",
 			},
 			mocks: groupMocks{
@@ -225,13 +225,13 @@ func Test_Delete(t *testing.T) {
 func Test_UpdateDebtByCode(t *testing.T) {
 	tests := []struct {
 		name   string
-		input  request.GroupDTO
+		input  request.GroupRequest
 		mocks  groupMocks
 		expErr error
 	}{
 		{
 			name: "error",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "Test1",
 				Debt: 1000,
 			},
@@ -247,7 +247,7 @@ func Test_UpdateDebtByCode(t *testing.T) {
 		},
 		{
 			name: "full flow",
-			input: request.GroupDTO{
+			input: request.GroupRequest{
 				Code: "Test1",
 				Debt: 1000,
 			},
