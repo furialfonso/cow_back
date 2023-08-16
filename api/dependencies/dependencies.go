@@ -6,8 +6,8 @@ import (
 	userHandler "docker-go-project/api/handlers/user"
 	"docker-go-project/api/server"
 	"docker-go-project/pkg/platform/database"
-	"docker-go-project/pkg/repository"
-	"docker-go-project/pkg/services"
+	groupRpository "docker-go-project/pkg/repository/group"
+	groupService "docker-go-project/pkg/services/group"
 
 	"go.uber.org/dig"
 )
@@ -22,10 +22,10 @@ func BuildDependencies() *dig.Container {
 	_ = Container.Provide(func() database.IDataBase {
 		return database.NewDataBase("mysql")
 	})
-	_ = Container.Provide(repository.NewRepository)
+	_ = Container.Provide(groupRpository.NewGroupRepository)
 	_ = Container.Provide(handlers.NewHandlerPing)
 	_ = Container.Provide(groupHandler.NewGroupHandler)
-	_ = Container.Provide(services.NewGroupService)
+	_ = Container.Provide(groupService.NewGroupService)
 	_ = Container.Provide(userHandler.NewUserHandler)
 
 	return Container

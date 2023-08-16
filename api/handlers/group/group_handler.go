@@ -3,7 +3,7 @@ package handlers
 import (
 	"docker-go-project/api/dto/request"
 	"docker-go-project/api/dto/response"
-	"docker-go-project/pkg/services"
+	"docker-go-project/pkg/services/group"
 	"fmt"
 	"net/http"
 
@@ -11,25 +11,25 @@ import (
 )
 
 type IGroupHandler interface {
-	GetGroups(c *gin.Context)
-	GetGroupByCode(c *gin.Context)
+	GetAll(c *gin.Context)
+	GetByCode(c *gin.Context)
 	Create(c *gin.Context)
 	Delete(c *gin.Context)
 }
 
 type groupHandler struct {
-	groupService services.IGroupService
+	groupService group.IGroupService
 }
 
-func NewGroupHandler(groupService services.IGroupService) IGroupHandler {
+func NewGroupHandler(groupService group.IGroupService) IGroupHandler {
 	return &groupHandler{
 		groupService,
 	}
 }
 
-func (gh *groupHandler) GetGroups(c *gin.Context) {
+func (gh *groupHandler) GetAll(c *gin.Context) {
 	ctx := c.Request.Context()
-	groups, err := gh.groupService.GetGroups(ctx)
+	groups, err := gh.groupService.GetAll(ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ApiErrors{
 			Code:    http.StatusInternalServerError,
@@ -40,7 +40,7 @@ func (gh *groupHandler) GetGroups(c *gin.Context) {
 	c.JSON(http.StatusOK, groups)
 }
 
-func (gh *groupHandler) GetGroupByCode(c *gin.Context) {
+func (gh *groupHandler) GetByCode(c *gin.Context) {
 	ctx := c.Request.Context()
 	code, exists := c.Params.Get("code")
 	if !exists {
@@ -51,7 +51,7 @@ func (gh *groupHandler) GetGroupByCode(c *gin.Context) {
 		return
 	}
 
-	group, err := gh.groupService.GetGroupByCode(ctx, code)
+	group, err := gh.groupService.GetByCode(ctx, code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ApiErrors{
 			Code:    http.StatusInternalServerError,
@@ -72,7 +72,7 @@ func (gh *groupHandler) Create(c *gin.Context) {
 		})
 		return
 	}
-	err := gh.groupService.CreateGroup(ctx, groupDTO)
+	err := gh.groupService.Create(ctx, groupDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ApiErrors{
 			Code:    http.StatusInternalServerError,
@@ -93,7 +93,7 @@ func (gh *groupHandler) Delete(c *gin.Context) {
 		})
 		return
 	}
-	err := gh.groupService.DeleteGroup(ctx, code)
+	err := gh.groupService.Delete(ctx, code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ApiErrors{
 			Code:    http.StatusInternalServerError,

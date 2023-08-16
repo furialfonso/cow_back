@@ -7,7 +7,7 @@ import (
 	"docker-go-project/mocks"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -23,6 +23,112 @@ type mockGroupHandler struct {
 
 type groupMocks struct {
 	groupHandler func(f *mockGroupHandler)
+}
+
+func Test_GetAll(t *testing.T) {
+	tests := []struct {
+		name    string
+		mocks   groupMocks
+		expCode int
+	}{
+		{
+			name: "error get groups",
+			mocks: groupMocks{
+				groupHandler: func(f *mockGroupHandler) {
+					f.groupService.Mock.On("GetAll", mock.Anything).Return([]response.GroupResponse{}, errors.New("error x"))
+				},
+			},
+			expCode: http.StatusInternalServerError,
+		},
+		{
+			name: "full flow",
+			mocks: groupMocks{
+				groupHandler: func(f *mockGroupHandler) {
+					f.groupService.Mock.On("GetAll", mock.Anything).Return([]response.GroupResponse{}, nil)
+				},
+			},
+			expCode: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ms := &mockGroupHandler{
+				&mocks.IGroupService{},
+			}
+			tc.mocks.groupHandler(ms)
+			handler := NewGroupHandler(ms.groupService)
+			url := "/groups"
+			_, engine := gin.CreateTestContext(httptest.NewRecorder())
+			engine.GET(url, func(ctx *gin.Context) {
+				handler.GetAll(ctx)
+			})
+			res := httptest.NewRecorder()
+			req := httptest.NewRequest(http.MethodGet, url, nil)
+			engine.ServeHTTP(res, req)
+			assert.Equal(t, tc.expCode, res.Code)
+		})
+	}
+}
+
+func Test_GetByCode(t *testing.T) {
+	tests := []struct {
+		name    string
+		code    string
+		mocks   groupMocks
+		expCode int
+	}{
+		{
+			name: "code not sending",
+			code: "",
+			mocks: groupMocks{
+				groupHandler: func(f *mockGroupHandler) {},
+			},
+			expCode: http.StatusBadRequest,
+		},
+		{
+			name: "error getting group by id",
+			code: "ABC",
+			mocks: groupMocks{
+				groupHandler: func(f *mockGroupHandler) {
+					f.groupService.Mock.On("GetByCode", mock.Anything, "ABC").Return(response.GroupResponse{}, errors.New("x"))
+				},
+			},
+			expCode: http.StatusInternalServerError,
+		},
+		{
+			name: "full flow",
+			code: "ABC",
+			mocks: groupMocks{
+				groupHandler: func(f *mockGroupHandler) {
+					f.groupService.Mock.On("GetByCode", mock.Anything, "ABC").Return(response.GroupResponse{
+						Code: "ABC",
+					}, nil)
+				},
+			},
+			expCode: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ms := &mockGroupHandler{
+				&mocks.IGroupService{},
+			}
+			tc.mocks.groupHandler(ms)
+			handler := NewGroupHandler(ms.groupService)
+			url := "/groups"
+			_, engine := gin.CreateTestContext(httptest.NewRecorder())
+			engine.GET(url, func(ctx *gin.Context) {
+				if tc.code != "" {
+					ctx.AddParam("code", tc.code)
+				}
+				handler.GetByCode(ctx)
+			})
+			res := httptest.NewRecorder()
+			req := httptest.NewRequest(http.MethodGet, url, nil)
+			engine.ServeHTTP(res, req)
+			assert.Equal(t, tc.expCode, res.Code)
+		})
+	}
 }
 
 func Test_Create(t *testing.T) {
@@ -47,7 +153,7 @@ func Test_Create(t *testing.T) {
 			},
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("CreateGroup", mock.Anything, request.GroupDTO{
+					f.groupService.Mock.On("Create", mock.Anything, request.GroupDTO{
 						Code: "test1",
 					}).Return(errors.New("error x"))
 				},
@@ -61,7 +167,7 @@ func Test_Create(t *testing.T) {
 			},
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("CreateGroup", mock.Anything, request.GroupDTO{
+					f.groupService.Mock.On("Create", mock.Anything, request.GroupDTO{
 						Code: "test1",
 					}).Return(nil)
 				},
@@ -76,66 +182,21 @@ func Test_Create(t *testing.T) {
 			}
 			tc.mocks.groupHandler(ms)
 			handler := NewGroupHandler(ms.groupService)
-			url := "/create-group"
+			url := "/groups/"
 			_, engine := gin.CreateTestContext(httptest.NewRecorder())
 			engine.POST(url, func(ctx *gin.Context) {
 				handler.Create(ctx)
 			})
 			res := httptest.NewRecorder()
 			b, _ := json.Marshal(tc.input)
-			req := httptest.NewRequest(http.MethodPost, url, ioutil.NopCloser(bytes.NewBuffer(b)))
+			req := httptest.NewRequest(http.MethodPost, url, io.NopCloser(bytes.NewBuffer(b)))
 			engine.ServeHTTP(res, req)
 			assert.Equal(t, tc.expCode, res.Code)
 		})
 	}
 }
 
-func Test_GetGroups(t *testing.T) {
-	tests := []struct {
-		name    string
-		mocks   groupMocks
-		expCode int
-	}{
-		{
-			name: "error get groups",
-			mocks: groupMocks{
-				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("GetGroups", mock.Anything).Return([]response.GroupResponse{}, errors.New("error x"))
-				},
-			},
-			expCode: http.StatusInternalServerError,
-		},
-		{
-			name: "full flow",
-			mocks: groupMocks{
-				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("GetGroups", mock.Anything).Return([]response.GroupResponse{}, nil)
-				},
-			},
-			expCode: http.StatusOK,
-		},
-	}
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			ms := &mockGroupHandler{
-				&mocks.IGroupService{},
-			}
-			tc.mocks.groupHandler(ms)
-			handler := NewGroupHandler(ms.groupService)
-			url := "/groups"
-			_, engine := gin.CreateTestContext(httptest.NewRecorder())
-			engine.GET(url, func(ctx *gin.Context) {
-				handler.GetGroups(ctx)
-			})
-			res := httptest.NewRecorder()
-			req := httptest.NewRequest(http.MethodGet, url, nil)
-			engine.ServeHTTP(res, req)
-			assert.Equal(t, tc.expCode, res.Code)
-		})
-	}
-}
-
-func Test_GetGroupByCode(t *testing.T) {
+func Test_Delete(t *testing.T) {
 	tests := []struct {
 		name    string
 		code    string
@@ -143,31 +204,28 @@ func Test_GetGroupByCode(t *testing.T) {
 		expCode int
 	}{
 		{
-			name: "code not sending",
-			code: "",
+			name: "id isnt present",
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {},
 			},
 			expCode: http.StatusBadRequest,
 		},
 		{
-			name: "error getting group by id",
-			code: "ABC",
+			name: "id not found",
+			code: "test1",
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("GetGroupByCode", mock.Anything, "ABC").Return(response.GroupResponse{}, errors.New("x"))
+					f.groupService.Mock.On("Delete", mock.Anything, "test1").Return(errors.New("id not fouund"))
 				},
 			},
 			expCode: http.StatusInternalServerError,
 		},
 		{
 			name: "full flow",
-			code: "ABC",
+			code: "test1",
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("GetGroupByCode", mock.Anything, "ABC").Return(response.GroupResponse{
-						Code: "ABC",
-					}, nil)
+					f.groupService.Mock.On("Delete", mock.Anything, "test1").Return(nil)
 				},
 			},
 			expCode: http.StatusOK,
@@ -180,16 +238,16 @@ func Test_GetGroupByCode(t *testing.T) {
 			}
 			tc.mocks.groupHandler(ms)
 			handler := NewGroupHandler(ms.groupService)
-			url := "/groups"
 			_, engine := gin.CreateTestContext(httptest.NewRecorder())
-			engine.GET(url, func(ctx *gin.Context) {
+			url := "/groups"
+			engine.DELETE(url, func(ctx *gin.Context) {
 				if tc.code != "" {
 					ctx.AddParam("code", tc.code)
 				}
-				handler.GetGroupByCode(ctx)
+				handler.Delete(ctx)
 			})
 			res := httptest.NewRecorder()
-			req := httptest.NewRequest(http.MethodGet, url, nil)
+			req := httptest.NewRequest(http.MethodDelete, url, nil)
 			engine.ServeHTTP(res, req)
 			assert.Equal(t, tc.expCode, res.Code)
 		})

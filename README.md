@@ -36,12 +36,18 @@ It is a 3-tier based architecture with dependency injection.
     ```
     - windows
     ```
-    docker run -v $PWD:/src -w /src vektra/mockery --all
+    docker pull vektra/mockery
     ```
   - Crear mocks
+    - Mac:
     ```
       mockery --all --disable-version-string
     ```
+    - Windows:
+    ```
+      docker run -v $PWD:/src -w /src vektra/mockery --all
+    ```
+  
 **Dig**
   - Documentation
     - https://ruslan.rocks/posts/golang-dig

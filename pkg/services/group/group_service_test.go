@@ -1,11 +1,11 @@
-package services
+package group
 
 import (
 	"context"
 	"docker-go-project/api/dto/request"
 	"docker-go-project/api/dto/response"
 	"docker-go-project/mocks"
-	"docker-go-project/pkg/repository/model"
+	"docker-go-project/pkg/repository/group"
 	"errors"
 	"testing"
 
@@ -21,7 +21,7 @@ type groupMocks struct {
 	groupService func(f *mockGroupService)
 }
 
-func Test_GetGroups(t *testing.T) {
+func Test_GetAll(t *testing.T) {
 	tests := []struct {
 		name   string
 		mocks  groupMocks
@@ -32,7 +32,7 @@ func Test_GetGroups(t *testing.T) {
 			name: "error get groups",
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("GetGroups", mock.Anything).Return([]model.Group{}, errors.New("error x"))
+					f.groupRepository.Mock.On("GetAll", mock.Anything).Return([]group.Group{}, errors.New("error x"))
 				},
 			},
 			expErr: errors.New("error x"),
@@ -41,7 +41,7 @@ func Test_GetGroups(t *testing.T) {
 			name: "full flow",
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("GetGroups", mock.Anything).Return([]model.Group{
+					f.groupRepository.Mock.On("GetAll", mock.Anything).Return([]group.Group{
 						{
 							ID:        1,
 							Code:      "YOU&I",
@@ -74,7 +74,7 @@ func Test_GetGroups(t *testing.T) {
 			}
 			tc.mocks.groupService(m)
 			service := NewGroupService(m.groupRepository)
-			groups, err := service.GetGroups(context.Background())
+			groups, err := service.GetAll(context.Background())
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)
 			}
@@ -83,7 +83,7 @@ func Test_GetGroups(t *testing.T) {
 	}
 }
 
-func Test_GetGroupByCode(t *testing.T) {
+func Test_GetByCode(t *testing.T) {
 	tests := []struct {
 		name   string
 		code   string
@@ -96,7 +96,7 @@ func Test_GetGroupByCode(t *testing.T) {
 			code: "YOU&I",
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("GetGroupByCode", mock.Anything, "YOU&I").Return(model.Group{}, errors.New("error x"))
+					f.groupRepository.Mock.On("GetByCode", mock.Anything, "YOU&I").Return(group.Group{}, errors.New("error x"))
 				},
 			},
 			expErr: errors.New("error x"),
@@ -106,7 +106,7 @@ func Test_GetGroupByCode(t *testing.T) {
 			code: "YOU&I",
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("GetGroupByCode", mock.Anything, "YOU&I").Return(model.Group{
+					f.groupRepository.Mock.On("GetByCode", mock.Anything, "YOU&I").Return(group.Group{
 						ID:        1,
 						Code:      "YOU&I",
 						Debt:      200000,
@@ -126,7 +126,7 @@ func Test_GetGroupByCode(t *testing.T) {
 			}
 			tc.mocks.groupService(m)
 			service := NewGroupService(m.groupRepository)
-			groups, err := service.GetGroupByCode(context.Background(), tc.code)
+			groups, err := service.GetByCode(context.Background(), tc.code)
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)
 			}
@@ -135,7 +135,7 @@ func Test_GetGroupByCode(t *testing.T) {
 	}
 }
 
-func Test_CreateGroup(t *testing.T) {
+func Test_Create(t *testing.T) {
 	tests := []struct {
 		name   string
 		input  request.GroupDTO
@@ -173,7 +173,48 @@ func Test_CreateGroup(t *testing.T) {
 			}
 			tc.mocks.groupService(m)
 			service := NewGroupService(m.groupRepository)
-			err := service.CreateGroup(context.Background(), tc.input)
+			err := service.Create(context.Background(), tc.input)
+			if err != nil {
+				assert.Equal(t, tc.expErr, err)
+			}
+		})
+	}
+}
+func Test_Delete(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		mocks  groupMocks
+		expErr error
+	}{
+		{
+			name:  "error",
+			input: "Test1",
+			mocks: groupMocks{
+				groupService: func(f *mockGroupService) {
+					f.groupRepository.Mock.On("Delete", mock.Anything, "Test1").Return(errors.New("error x"))
+				},
+			},
+			expErr: errors.New("error x"),
+		},
+		{
+			name:  "full flow",
+			input: "Test1",
+			mocks: groupMocks{
+				groupService: func(f *mockGroupService) {
+					f.groupRepository.Mock.On("Delete", mock.Anything, "Test1").Return(nil)
+				},
+			},
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			m := &mockGroupService{
+				groupRepository: &mocks.IGroupRepository{},
+			}
+			tc.mocks.groupService(m)
+			service := NewGroupService(m.groupRepository)
+			err := service.Delete(context.Background(), tc.input)
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)
 			}
@@ -196,7 +237,7 @@ func Test_UpdateDebtByCode(t *testing.T) {
 			},
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("UpdateGroupDebtByCode", mock.Anything, model.Group{
+					f.groupRepository.Mock.On("UpdateDebtByCode", mock.Anything, group.Group{
 						Code: "Test1",
 						Debt: 1000,
 					}).Return(errors.New("error x"))
@@ -212,7 +253,7 @@ func Test_UpdateDebtByCode(t *testing.T) {
 			},
 			mocks: groupMocks{
 				groupService: func(f *mockGroupService) {
-					f.groupRepository.Mock.On("UpdateGroupDebtByCode", mock.Anything, model.Group{
+					f.groupRepository.Mock.On("UpdateDebtByCode", mock.Anything, group.Group{
 						Code: "Test1",
 						Debt: 1000,
 					}).Return(nil)

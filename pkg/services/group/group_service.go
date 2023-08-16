@@ -1,34 +1,33 @@
-package services
+package group
 
 import (
 	"context"
 	"docker-go-project/api/dto/request"
 	"docker-go-project/api/dto/response"
-	"docker-go-project/pkg/repository"
-	"docker-go-project/pkg/repository/model"
+	"docker-go-project/pkg/repository/group"
 )
 
 type IGroupService interface {
-	GetGroups(ctx context.Context) ([]response.GroupResponse, error)
-	GetGroupByCode(ctx context.Context, code string) (response.GroupResponse, error)
-	CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error
-	DeleteGroup(ctx context.Context, code string) error
+	GetAll(ctx context.Context) ([]response.GroupResponse, error)
+	GetByCode(ctx context.Context, code string) (response.GroupResponse, error)
+	Create(ctx context.Context, groupDTO request.GroupDTO) error
+	Delete(ctx context.Context, code string) error
 	UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error
 }
 
 type groupService struct {
-	groupRepository repository.IGroupRepository
+	groupRepository group.IGroupRepository
 }
 
-func NewGroupService(groupRepository repository.IGroupRepository) IGroupService {
+func NewGroupService(groupRepository group.IGroupRepository) IGroupService {
 	return &groupService{
 		groupRepository: groupRepository,
 	}
 }
 
-func (gs *groupService) GetGroups(ctx context.Context) ([]response.GroupResponse, error) {
+func (gs *groupService) GetAll(ctx context.Context) ([]response.GroupResponse, error) {
 	var groupsResponse []response.GroupResponse
-	groups, err := gs.groupRepository.GetGroups(ctx)
+	groups, err := gs.groupRepository.GetAll(ctx)
 	if err != nil {
 		return groupsResponse, err
 	}
@@ -40,9 +39,9 @@ func (gs *groupService) GetGroups(ctx context.Context) ([]response.GroupResponse
 	return groupsResponse, nil
 }
 
-func (gs *groupService) GetGroupByCode(ctx context.Context, code string) (response.GroupResponse, error) {
+func (gs *groupService) GetByCode(ctx context.Context, code string) (response.GroupResponse, error) {
 	var groupResponse response.GroupResponse
-	rs, err := gs.groupRepository.GetGroupByCode(ctx, code)
+	rs, err := gs.groupRepository.GetByCode(ctx, code)
 	if err != nil {
 		return groupResponse, err
 	}
@@ -50,7 +49,7 @@ func (gs *groupService) GetGroupByCode(ctx context.Context, code string) (respon
 	return groupResponse, nil
 }
 
-func (gs *groupService) CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error {
+func (gs *groupService) Create(ctx context.Context, groupDTO request.GroupDTO) error {
 	_, err := gs.groupRepository.Create(ctx, groupDTO.Code)
 	if err != nil {
 		return err
@@ -58,7 +57,7 @@ func (gs *groupService) CreateGroup(ctx context.Context, groupDTO request.GroupD
 	return nil
 }
 
-func (gs *groupService) DeleteGroup(ctx context.Context, code string) error {
+func (gs *groupService) Delete(ctx context.Context, code string) error {
 	err := gs.groupRepository.Delete(ctx, code)
 	if err != nil {
 		return err
@@ -67,7 +66,7 @@ func (gs *groupService) DeleteGroup(ctx context.Context, code string) error {
 }
 
 func (gs *groupService) UpdateDebtByCode(ctx context.Context, groupDTO request.GroupDTO) error {
-	err := gs.groupRepository.UpdateGroupDebtByCode(ctx, model.Group{
+	err := gs.groupRepository.UpdateDebtByCode(ctx, group.Group{
 		Code: groupDTO.Code,
 		Debt: groupDTO.Debt,
 	})

@@ -23,13 +23,13 @@ func (_m *IGroupHandler) Delete(c *gin.Context) {
 	_m.Called(c)
 }
 
-// GetGroupByCode provides a mock function with given fields: c
-func (_m *IGroupHandler) GetGroupByCode(c *gin.Context) {
+// GetAll provides a mock function with given fields: c
+func (_m *IGroupHandler) GetAll(c *gin.Context) {
 	_m.Called(c)
 }
 
-// GetGroups provides a mock function with given fields: c
-func (_m *IGroupHandler) GetGroups(c *gin.Context) {
+// GetByCode provides a mock function with given fields: c
+func (_m *IGroupHandler) GetByCode(c *gin.Context) {
 	_m.Called(c)
 }
 

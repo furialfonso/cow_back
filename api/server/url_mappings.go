@@ -28,8 +28,8 @@ func (r Router) Resource(gin *gin.Engine) {
 	gin.GET("/ping", r.pingHandler.Ping)
 	group := gin.Group("/groups")
 	{
-		group.GET("", r.groupHandler.GetGroups)
-		group.GET("/:code", r.groupHandler.GetGroupByCode)
+		group.GET("", r.groupHandler.GetAll)
+		group.GET("/:code", r.groupHandler.GetByCode)
 		group.POST("", r.groupHandler.Create)
 		group.DELETE("/:code", r.groupHandler.Delete)
 	}

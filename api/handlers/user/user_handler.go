@@ -1,6 +1,10 @@
 package user
 
-import "github.com/gin-gonic/gin"
+import (
+	"docker-go-project/pkg/services/user"
+
+	"github.com/gin-gonic/gin"
+)
 
 type IUserHandler interface {
 	GetUsers(c *gin.Context)
@@ -10,7 +14,7 @@ type IUserHandler interface {
 }
 
 type userHandler struct {
-	// userService services.IGroupService
+	userService user.IUserService
 }
 
 func NewUserHandler() IUserHandler {

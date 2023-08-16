@@ -1,7 +1,7 @@
-package templates
+package template
 
 var (
-	GetGroups = `
+	GetAll = `
 			select id,
 						code,
 						debt,
@@ -9,7 +9,7 @@ var (
 			from c_group;
 	`
 
-	GetGroupByCode = `
+	GetByCode = `
 			select id,
 						code,
 						debt,
@@ -18,16 +18,16 @@ var (
 			where code = ?;
 	`
 
-	CreateGroup = `
+	Create = `
 		insert into c_group(code)values(?)
 	`
 
-	DeleteGroup = `
+	Delete = `
 		delete from c_group
 		where code = ?;
 	`
 
-	UpdateGroup = `
+	Update = `
 		update c_group 
 		set debt = ?
 		where code = ?

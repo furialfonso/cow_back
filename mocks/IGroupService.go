@@ -4,9 +4,10 @@ package mocks
 
 import (
 	context "context"
-	request "docker-go-project/api/dto/request"
 
 	mock "github.com/stretchr/testify/mock"
+
+	request "docker-go-project/api/dto/request"
 
 	response "docker-go-project/api/dto/response"
 )
@@ -16,8 +17,8 @@ type IGroupService struct {
 	mock.Mock
 }
 
-// CreateGroup provides a mock function with given fields: ctx, groupDTO
-func (_m *IGroupService) CreateGroup(ctx context.Context, groupDTO request.GroupDTO) error {
+// Create provides a mock function with given fields: ctx, groupDTO
+func (_m *IGroupService) Create(ctx context.Context, groupDTO request.GroupDTO) error {
 	ret := _m.Called(ctx, groupDTO)
 
 	var r0 error
@@ -30,8 +31,8 @@ func (_m *IGroupService) CreateGroup(ctx context.Context, groupDTO request.Group
 	return r0
 }
 
-// DeleteGroup provides a mock function with given fields: ctx, code
-func (_m *IGroupService) DeleteGroup(ctx context.Context, code string) error {
+// Delete provides a mock function with given fields: ctx, code
+func (_m *IGroupService) Delete(ctx context.Context, code string) error {
 	ret := _m.Called(ctx, code)
 
 	var r0 error
@@ -44,32 +45,8 @@ func (_m *IGroupService) DeleteGroup(ctx context.Context, code string) error {
 	return r0
 }
 
-// GetGroupByCode provides a mock function with given fields: ctx, code
-func (_m *IGroupService) GetGroupByCode(ctx context.Context, code string) (response.GroupResponse, error) {
-	ret := _m.Called(ctx, code)
-
-	var r0 response.GroupResponse
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) (response.GroupResponse, error)); ok {
-		return rf(ctx, code)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) response.GroupResponse); ok {
-		r0 = rf(ctx, code)
-	} else {
-		r0 = ret.Get(0).(response.GroupResponse)
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, code)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetGroups provides a mock function with given fields: ctx
-func (_m *IGroupService) GetGroups(ctx context.Context) ([]response.GroupResponse, error) {
+// GetAll provides a mock function with given fields: ctx
+func (_m *IGroupService) GetAll(ctx context.Context) ([]response.GroupResponse, error) {
 	ret := _m.Called(ctx)
 
 	var r0 []response.GroupResponse
@@ -87,6 +64,30 @@ func (_m *IGroupService) GetGroups(ctx context.Context) ([]response.GroupRespons
 
 	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetByCode provides a mock function with given fields: ctx, code
+func (_m *IGroupService) GetByCode(ctx context.Context, code string) (response.GroupResponse, error) {
+	ret := _m.Called(ctx, code)
+
+	var r0 response.GroupResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (response.GroupResponse, error)); ok {
+		return rf(ctx, code)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) response.GroupResponse); ok {
+		r0 = rf(ctx, code)
+	} else {
+		r0 = ret.Get(0).(response.GroupResponse)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, code)
 	} else {
 		r1 = ret.Error(1)
 	}
