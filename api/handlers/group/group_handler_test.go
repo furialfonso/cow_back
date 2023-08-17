@@ -204,18 +204,18 @@ func Test_Delete(t *testing.T) {
 		expCode int
 	}{
 		{
-			name: "id isnt present",
+			name: "code isnt present",
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {},
 			},
 			expCode: http.StatusBadRequest,
 		},
 		{
-			name: "id not found",
+			name: "code not found",
 			code: "test1",
 			mocks: groupMocks{
 				groupHandler: func(f *mockGroupHandler) {
-					f.groupService.Mock.On("Delete", mock.Anything, "test1").Return(errors.New("id not fouund"))
+					f.groupService.Mock.On("Delete", mock.Anything, "test1").Return(errors.New("code not found"))
 				},
 			},
 			expCode: http.StatusInternalServerError,
