@@ -1,5 +1,5 @@
 package response
 
 type GroupResponse struct {
-	Code string
+	Code string `json:"name_group"`
 }
