@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-playground/assert v1.2.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/google/logger v1.1.1
 	github.com/olebedev/config v0.0.0-20220822221314-86fa169f9f99
