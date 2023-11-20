@@ -1,4 +1,4 @@
-# CowBack
+# cow_back
 
 It is a 3-tier based architecture with dependency injection.
 
@@ -16,7 +16,7 @@ It is a 3-tier based architecture with dependency injection.
 **Run unit tests**
   - execute tests
   ```
-    export CONFIG_DIR=${workspaceRoot}/CowBack/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
+    export CONFIG_DIR=${workspaceRoot}/cow_back/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
   ```
   - Look result in html
   ```

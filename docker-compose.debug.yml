@@ -1,8 +1,8 @@
 # version: '3.4'
 
 # services:
-#   CowBack:
-#     image: CowBack
+#   cow_back:
+#     image: cow_back
 #     build:
 #       context: .
 #       dockerfile: ./Dockerfile
