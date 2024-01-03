@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
+	"github.com/go-playground/assert"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -61,12 +61,11 @@ func Test_GetUsersByGroup(t *testing.T) {
 						GroupName: "test",
 						Users: []response.UserResponse{
 							{
-								Name:           "Diego",
-								SecondName:     "Alejandro",
-								LastName:       "Malagon",
-								SecondLastName: "Martinez",
-								Email:          "diego@gmail.com",
-								NickName:       "diegom",
+								ID:       "1",
+								Name:     "Diego",
+								LastName: "Malagon",
+								Email:    "diego@gmail.com",
+								NickName: "diegom",
 							},
 						},
 					}, nil)

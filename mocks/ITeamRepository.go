@@ -53,21 +53,21 @@ func (_m *ITeamRepository) DecomposeTeam(ctx context.Context, _a1 team.Team) err
 }
 
 // ExistUserInTeam provides a mock function with given fields: ctx, id
-func (_m *ITeamRepository) ExistUserInTeam(ctx context.Context, id int64) (bool, error) {
+func (_m *ITeamRepository) ExistUserInTeam(ctx context.Context, id string) (bool, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 bool
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64) (bool, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) (bool, error)); ok {
 		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64) bool); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) bool); ok {
 		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
@@ -102,13 +102,12 @@ func (_m *ITeamRepository) GetUsersByGroup(ctx context.Context, code string) ([]
 	return r0, r1
 }
 
-type mockConstructorTestingTNewITeamRepository interface {
+// NewITeamRepository creates a new instance of ITeamRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewITeamRepository(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewITeamRepository creates a new instance of ITeamRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewITeamRepository(t mockConstructorTestingTNewITeamRepository) *ITeamRepository {
+}) *ITeamRepository {
 	mock := &ITeamRepository{}
 	mock.Mock.Test(t)
 

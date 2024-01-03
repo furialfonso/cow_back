@@ -4,7 +4,8 @@ import (
 	"docker-go-project/api/handlers"
 	groupHandler "docker-go-project/api/handlers/group"
 	teamHandler "docker-go-project/api/handlers/team"
-	userHandler "docker-go-project/api/handlers/user"
+	"docker-go-project/api/jobs"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,19 +13,19 @@ import (
 type Router struct {
 	pingHandler  handlers.IPingHandler
 	groupHandler groupHandler.IGroupHandler
-	userHandler  userHandler.IUserHandler
 	teamHandler  teamHandler.ITeamHandler
+	job          jobs.IJob
 }
 
 func NewRouter(pingHandler handlers.IPingHandler,
 	groupHandler groupHandler.IGroupHandler,
-	userHandler userHandler.IUserHandler,
-	teamHandler teamHandler.ITeamHandler) *Router {
+	teamHandler teamHandler.ITeamHandler,
+	job jobs.IJob) *Router {
 	return &Router{
 		pingHandler,
 		groupHandler,
-		userHandler,
 		teamHandler,
+		job,
 	}
 }
 
@@ -38,18 +39,20 @@ func (r Router) Resource(gin *gin.Engine) {
 		group.DELETE("/:code", r.groupHandler.Delete)
 	}
 
-	user := gin.Group("/users")
-	{
-		user.GET("", r.userHandler.GetAll)
-		user.GET("/:code", r.userHandler.GetByNickName)
-		user.POST("", r.userHandler.Create)
-		user.DELETE("/:code", r.userHandler.Delete)
-	}
-
 	team := gin.Group("/team")
 	{
 		team.GET("/:code", r.teamHandler.GetUsersByGroup)
 		team.POST("/:code", r.teamHandler.ComposeTeam)
 		team.DELETE("/:code", r.teamHandler.DecomposeTeam)
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer func() {
+			wg.Done()
+		}()
+		r.job.UserCache()
+	}()
+	wg.Wait()
 }

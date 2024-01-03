@@ -68,13 +68,12 @@ func (_m *ITeamService) GetUsersByGroup(ctx context.Context, code string) (respo
 	return r0, r1
 }
 
-type mockConstructorTestingTNewITeamService interface {
+// NewITeamService creates a new instance of ITeamService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewITeamService(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewITeamService creates a new instance of ITeamService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewITeamService(t mockConstructorTestingTNewITeamService) *ITeamService {
+}) *ITeamService {
 	mock := &ITeamService{}
 	mock.Mock.Test(t)
 

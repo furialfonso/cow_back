@@ -27,13 +27,12 @@ func (_m *ITeamHandler) GetUsersByGroup(c *gin.Context) {
 	_m.Called(c)
 }
 
-type mockConstructorTestingTNewITeamHandler interface {
+// NewITeamHandler creates a new instance of ITeamHandler. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewITeamHandler(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewITeamHandler creates a new instance of ITeamHandler. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewITeamHandler(t mockConstructorTestingTNewITeamHandler) *ITeamHandler {
+}) *ITeamHandler {
 	mock := &ITeamHandler{}
 	mock.Mock.Test(t)
 

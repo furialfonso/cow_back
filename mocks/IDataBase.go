@@ -45,13 +45,12 @@ func (_m *IDataBase) GetWrite() sql.IWrite {
 	return r0
 }
 
-type mockConstructorTestingTNewIDataBase interface {
+// NewIDataBase creates a new instance of IDataBase. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewIDataBase(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIDataBase creates a new instance of IDataBase. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIDataBase(t mockConstructorTestingTNewIDataBase) *IDataBase {
+}) *IDataBase {
 	mock := &IDataBase{}
 	mock.Mock.Test(t)
 

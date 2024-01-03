@@ -5,3 +5,10 @@ mysql:
   port: 3306
   host: localhost
   schema: cow_local_db
+users-api:
+  url: http://localhost:9002
+  timeout: 5s
+job:
+  users:
+    active: true
+    expression: 0/1 * * * *

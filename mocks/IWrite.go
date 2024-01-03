@@ -98,13 +98,12 @@ func (_m *IWrite) Rollback(tx *sql.Tx) error {
 	return r0
 }
 
-type mockConstructorTestingTNewIWrite interface {
+// NewIWrite creates a new instance of IWrite. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewIWrite(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIWrite creates a new instance of IWrite. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIWrite(t mockConstructorTestingTNewIWrite) *IWrite {
+}) *IWrite {
 	mock := &IWrite{}
 	mock.Mock.Test(t)
 

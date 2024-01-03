@@ -11,8 +11,8 @@ import (
 
 type mockTeamService struct {
 	groupRepository *mocks.IGroupRepository
-	userRepository  *mocks.IUserRepository
 	teamRepository  *mocks.ITeamRepository
+	userCache       *mocks.ICache
 }
 
 type teamMocks struct {
@@ -32,10 +32,10 @@ func Test_GetUsersByGroup(t *testing.T) {
 			m := &mockTeamService{
 				groupRepository: &mocks.IGroupRepository{},
 				teamRepository:  &mocks.ITeamRepository{},
-				userRepository:  &mocks.IUserRepository{},
+				userCache:       &mocks.ICache{},
 			}
 			tc.mocks.teamService(m)
-			service := NewTeamService(m.groupRepository, m.userRepository, m.teamRepository)
+			service := NewTeamService(m.groupRepository, m.teamRepository, m.userCache)
 			team, err := service.GetUsersByGroup(context.Background(), tc.code)
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)

@@ -109,13 +109,12 @@ func (_m *IGroupService) UpdateDebtByCode(ctx context.Context, groupRequest requ
 	return r0
 }
 
-type mockConstructorTestingTNewIGroupService interface {
+// NewIGroupService creates a new instance of IGroupService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewIGroupService(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIGroupService creates a new instance of IGroupService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIGroupService(t mockConstructorTestingTNewIGroupService) *IGroupService {
+}) *IGroupService {
 	mock := &IGroupService{}
 	mock.Mock.Test(t)
 

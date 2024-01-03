@@ -8,7 +8,7 @@ import (
 
 type ITeamRepository interface {
 	GetUsersByGroup(ctx context.Context, code string) ([]string, error)
-	ExistUserInTeam(ctx context.Context, id int64) (bool, error)
+	ExistUserInTeam(ctx context.Context, id string) (bool, error)
 	ComposeTeam(ctx context.Context, team Team) (int64, error)
 	DecomposeTeam(ctx context.Context, team Team) error
 }
@@ -39,7 +39,7 @@ func (tr *teamRepository) GetUsersByGroup(ctx context.Context, code string) ([]s
 	return users, nil
 }
 
-func (tr *teamRepository) ExistUserInTeam(ctx context.Context, id int64) (bool, error) {
+func (tr *teamRepository) ExistUserInTeam(ctx context.Context, id string) (bool, error) {
 	rs, err := tr.db.GetRead().QueryContext(ctx, template.GetUserByID, id)
 	if err != nil {
 		return false, err

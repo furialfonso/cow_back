@@ -33,13 +33,12 @@ func (_m *IGroupHandler) GetByCode(c *gin.Context) {
 	_m.Called(c)
 }
 
-type mockConstructorTestingTNewIGroupHandler interface {
+// NewIGroupHandler creates a new instance of IGroupHandler. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewIGroupHandler(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIGroupHandler creates a new instance of IGroupHandler. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIGroupHandler(t mockConstructorTestingTNewIGroupHandler) *IGroupHandler {
+}) *IGroupHandler {
 	mock := &IGroupHandler{}
 	mock.Mock.Test(t)
 

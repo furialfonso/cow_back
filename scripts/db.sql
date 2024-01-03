@@ -10,23 +10,10 @@ CREATE TABLE IF NOT EXISTS `c_group` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `group_uk` (`code` ASC) VISIBLE)
 ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS `c_user` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `second_name` VARCHAR(45) NULL,
-  `last_name` VARCHAR(45) NOT NULL,
-  `second_last_name` VARCHAR(45) NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `nick_name` VARCHAR(45) NOT NULL,
-  `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `user_uk1` (`email` ASC) VISIBLE,
-  UNIQUE INDEX `user_uk2` (`nick_name` ASC) VISIBLE)
-ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `c_team` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `group_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
+  `user_id` VARCHAR(45) NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_team_group1_idx` (`group_id` ASC) VISIBLE,
@@ -34,11 +21,6 @@ CREATE TABLE IF NOT EXISTS `c_team` (
   CONSTRAINT `fk_team_group1`
     FOREIGN KEY (`group_id`)
     REFERENCES `c_group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_team_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `c_user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

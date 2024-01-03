@@ -116,13 +116,12 @@ func (_m *IGroupRepository) UpdateDebtByCode(ctx context.Context, _a1 group.Grou
 	return r0
 }
 
-type mockConstructorTestingTNewIGroupRepository interface {
+// NewIGroupRepository creates a new instance of IGroupRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewIGroupRepository(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIGroupRepository creates a new instance of IGroupRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIGroupRepository(t mockConstructorTestingTNewIGroupRepository) *IGroupRepository {
+}) *IGroupRepository {
 	mock := &IGroupRepository{}
 	mock.Mock.Test(t)
 

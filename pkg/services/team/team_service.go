@@ -4,9 +4,9 @@ import (
 	"context"
 	"docker-go-project/api/dto/request"
 	"docker-go-project/api/dto/response"
+	"docker-go-project/pkg/platform/cache"
 	"docker-go-project/pkg/repository/group"
 	"docker-go-project/pkg/repository/team"
-	"docker-go-project/pkg/repository/user"
 	"fmt"
 
 	"github.com/google/logger"
@@ -20,17 +20,17 @@ type ITeamService interface {
 
 type teamService struct {
 	groupRepository group.IGroupRepository
-	userRepository  user.IUserRepository
 	teamRepository  team.ITeamRepository
+	userCache       cache.ICache
 }
 
 func NewTeamService(groupRepository group.IGroupRepository,
-	userRepository user.IUserRepository,
-	teamRepository team.ITeamRepository) ITeamService {
+	teamRepository team.ITeamRepository,
+	userCache cache.ICache) ITeamService {
 	return &teamService{
 		groupRepository: groupRepository,
-		userRepository:  userRepository,
 		teamRepository:  teamRepository,
+		userCache:       userCache,
 	}
 }
 
@@ -40,18 +40,17 @@ func (ts *teamService) GetUsersByGroup(ctx context.Context, code string) (respon
 	if err != nil {
 		return teamUserResponse, err
 	}
-	for _, user := range users {
-		us, err := ts.userRepository.GetByNickName(ctx, user)
-		if err != nil {
-			return teamUserResponse, err
+	for _, userID := range users {
+		user, exists := ts.userCache.Get(userID)
+		if !exists {
+			continue
 		}
 		teamUserResponse.Users = append(teamUserResponse.Users, response.UserResponse{
-			Name:           us.Name,
-			SecondName:     us.SecondName,
-			LastName:       us.LastName,
-			SecondLastName: us.SecondLastName,
-			Email:          us.Email,
-			NickName:       us.NickName,
+			ID:       user.ID,
+			Name:     user.Name,
+			LastName: user.LastName,
+			Email:    user.Email,
+			NickName: user.NickName,
 		})
 	}
 	teamUserResponse.GroupName = code
@@ -67,12 +66,11 @@ func (ts *teamService) ComposeTeam(ctx context.Context, code string, teamRequest
 	}
 
 	for _, nickName := range teamRequest.Users {
-		user, err := ts.userRepository.GetByNickName(ctx, nickName)
-		if err != nil {
-			logger.Error("error searching user", err)
+		user, exists := ts.userCache.GetByNickName(nickName)
+		if !exists {
+			logger.Infof("user %s not found", nickName)
 			continue
 		}
-
 		exist, err := ts.teamRepository.ExistUserInTeam(ctx, user.ID)
 		if err != nil {
 			logger.Error("error searching user", err)
@@ -82,7 +80,6 @@ func (ts *teamService) ComposeTeam(ctx context.Context, code string, teamRequest
 			logger.Infof("user %s already exist in the team %s", nickName, code)
 			continue
 		}
-
 		_, err = ts.teamRepository.ComposeTeam(ctx, team.Team{
 			GroupID: group.ID,
 			UserID:  user.ID,
@@ -102,9 +99,9 @@ func (ts *teamService) DecomposeTeam(ctx context.Context, code string, teamReque
 		return err
 	}
 	for _, nickName := range teamRequest.Users {
-		user, err := ts.userRepository.GetByNickName(ctx, nickName)
-		if err != nil {
-			logger.Error("error searching user", err)
+		user, exists := ts.userCache.GetByNickName(nickName)
+		if !exists {
+			logger.Infof("user %s not found", nickName)
 			continue
 		}
 
