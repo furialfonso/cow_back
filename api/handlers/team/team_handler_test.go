@@ -2,9 +2,9 @@ package team
 
 import (
 	"bytes"
-	"docker-go-project/api/dto/request"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/mocks"
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
 	"encoding/json"
 	"errors"
 	"io"
@@ -25,7 +25,7 @@ type teamMocks struct {
 	teamHandler func(f *mockTeamHandler)
 }
 
-func Test_GetUsersByGroup(t *testing.T) {
+func Test_GetTeamByGroup(t *testing.T) {
 	tests := []struct {
 		name    string
 		code    string
@@ -44,7 +44,7 @@ func Test_GetUsersByGroup(t *testing.T) {
 			code: "test",
 			mocks: teamMocks{
 				teamHandler: func(f *mockTeamHandler) {
-					f.teamService.Mock.On("GetUsersByGroup", mock.Anything, "test").Return(response.TeamUsersResponse{
+					f.teamService.Mock.On("GetTeamByGroup", mock.Anything, "test").Return(response.UsersByTeamResponse{
 						GroupName: "test",
 						Users:     []response.UserResponse{},
 					}, errors.New("error searching team"))
@@ -57,7 +57,7 @@ func Test_GetUsersByGroup(t *testing.T) {
 			code: "test",
 			mocks: teamMocks{
 				teamHandler: func(f *mockTeamHandler) {
-					f.teamService.Mock.On("GetUsersByGroup", mock.Anything, "test").Return(response.TeamUsersResponse{
+					f.teamService.Mock.On("GetTeamByGroup", mock.Anything, "test").Return(response.UsersByTeamResponse{
 						GroupName: "test",
 						Users: []response.UserResponse{
 							{
@@ -87,7 +87,7 @@ func Test_GetUsersByGroup(t *testing.T) {
 				if tc.code != "" {
 					ctx.AddParam("code", tc.code)
 				}
-				handler.GetUsersByGroup(ctx)
+				handler.GetTeamByGroup(ctx)
 			})
 			res := httptest.NewRecorder()
 			req := httptest.NewRequest(http.MethodGet, url, nil)

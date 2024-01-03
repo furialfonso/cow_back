@@ -2,10 +2,10 @@ package group
 
 import (
 	"context"
-	"docker-go-project/api/dto/request"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/mocks"
-	"docker-go-project/pkg/repository/group"
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
+	"cow_back/pkg/repository/group"
 	"errors"
 	"testing"
 

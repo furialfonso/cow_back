@@ -1,12 +1,22 @@
 package team
 
 var (
-	GetUsersByGroup = `
+	GetTeamByGroup = `
 		select b.user_id
 		from cow_local_db.c_group a,
 					cow_local_db.c_team b
 		where b.group_id = a.id
 		and a.code = ?
+	`
+
+	GetTeamsByUser = `
+		select b.id,
+		       b.code,
+           b.debt,
+					 b.created_at 
+		from cow_local_db.c_team a,
+     		 cow_local_db.c_group b
+		where a.user_id = ?
 	`
 
 	GetUserByID = `

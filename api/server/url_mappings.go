@@ -1,10 +1,10 @@
 package server
 
 import (
-	"docker-go-project/api/handlers"
-	groupHandler "docker-go-project/api/handlers/group"
-	teamHandler "docker-go-project/api/handlers/team"
-	"docker-go-project/api/jobs"
+	"cow_back/api/handlers"
+	groupHandler "cow_back/api/handlers/group"
+	teamHandler "cow_back/api/handlers/team"
+	"cow_back/api/jobs"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -39,9 +39,10 @@ func (r Router) Resource(gin *gin.Engine) {
 		group.DELETE("/:code", r.groupHandler.Delete)
 	}
 
-	team := gin.Group("/team")
+	team := gin.Group("/teams")
 	{
-		team.GET("/:code", r.teamHandler.GetUsersByGroup)
+		team.GET("/:code", r.teamHandler.GetTeamByGroup)
+		team.GET("/user/:userID", r.teamHandler.GetTeamsByUser)
 		team.POST("/:code", r.teamHandler.ComposeTeam)
 		team.DELETE("/:code", r.teamHandler.DecomposeTeam)
 	}

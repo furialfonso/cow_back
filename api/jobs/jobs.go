@@ -2,8 +2,8 @@ package jobs
 
 import (
 	"context"
-	"docker-go-project/pkg/config"
-	"docker-go-project/pkg/services/user"
+	"cow_back/pkg/config"
+	"cow_back/pkg/services/user"
 	"fmt"
 	"time"
 

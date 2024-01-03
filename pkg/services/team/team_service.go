@@ -2,18 +2,19 @@ package team
 
 import (
 	"context"
-	"docker-go-project/api/dto/request"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/pkg/platform/cache"
-	"docker-go-project/pkg/repository/group"
-	"docker-go-project/pkg/repository/team"
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/pkg/platform/cache"
+	"cow_back/pkg/repository/group"
+	"cow_back/pkg/repository/team"
 	"fmt"
 
 	"github.com/google/logger"
 )
 
 type ITeamService interface {
-	GetUsersByGroup(ctx context.Context, code string) (response.TeamUsersResponse, error)
+	GetTeamByGroup(ctx context.Context, code string) (response.UsersByTeamResponse, error)
+	GetTeamsByUser(ctx context.Context, userID string) (response.TeamsByUserResponse, error)
 	ComposeTeam(ctx context.Context, code string, teamRequest request.TeamRequest) error
 	DecomposeTeam(ctx context.Context, code string, teamRequest request.TeamRequest) error
 }
@@ -34,18 +35,18 @@ func NewTeamService(groupRepository group.IGroupRepository,
 	}
 }
 
-func (ts *teamService) GetUsersByGroup(ctx context.Context, code string) (response.TeamUsersResponse, error) {
-	var teamUserResponse response.TeamUsersResponse
-	users, err := ts.teamRepository.GetUsersByGroup(ctx, code)
+func (ts *teamService) GetTeamByGroup(ctx context.Context, code string) (response.UsersByTeamResponse, error) {
+	var usersByTeamResponse response.UsersByTeamResponse
+	users, err := ts.teamRepository.GetTeamByGroup(ctx, code)
 	if err != nil {
-		return teamUserResponse, err
+		return usersByTeamResponse, err
 	}
 	for _, userID := range users {
 		user, exists := ts.userCache.Get(userID)
 		if !exists {
 			continue
 		}
-		teamUserResponse.Users = append(teamUserResponse.Users, response.UserResponse{
+		usersByTeamResponse.Users = append(usersByTeamResponse.Users, response.UserResponse{
 			ID:       user.ID,
 			Name:     user.Name,
 			LastName: user.LastName,
@@ -53,9 +54,24 @@ func (ts *teamService) GetUsersByGroup(ctx context.Context, code string) (respon
 			NickName: user.NickName,
 		})
 	}
-	teamUserResponse.GroupName = code
+	usersByTeamResponse.GroupName = code
 
-	return teamUserResponse, nil
+	return usersByTeamResponse, nil
+}
+
+func (ts *teamService) GetTeamsByUser(ctx context.Context, userID string) (response.TeamsByUserResponse, error) {
+	var teamsByUserResponse response.TeamsByUserResponse
+	groups, err := ts.teamRepository.GetTeamsByUser(ctx, userID)
+	if err != nil {
+		return teamsByUserResponse, err
+	}
+	for _, group := range groups {
+		teamsByUserResponse.Teams = append(teamsByUserResponse.Teams, response.TeamResponse{
+			Code: group.Code,
+			Debt: group.Debt,
+		})
+	}
+	return teamsByUserResponse, nil
 }
 
 func (ts *teamService) ComposeTeam(ctx context.Context, code string, teamRequest request.TeamRequest) error {

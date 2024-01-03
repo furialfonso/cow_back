@@ -2,8 +2,8 @@ package team
 
 import (
 	"context"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/mocks"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
 	"testing"
 
 	"github.com/go-playground/assert"
@@ -24,7 +24,7 @@ func Test_GetUsersByGroup(t *testing.T) {
 		name   string
 		code   string
 		mocks  teamMocks
-		outPut response.TeamUsersResponse
+		outPut response.UsersByTeamResponse
 		expErr error
 	}{}
 	for _, tc := range tests {
@@ -36,7 +36,7 @@ func Test_GetUsersByGroup(t *testing.T) {
 			}
 			tc.mocks.teamService(m)
 			service := NewTeamService(m.groupRepository, m.teamRepository, m.userCache)
-			team, err := service.GetUsersByGroup(context.Background(), tc.code)
+			team, err := service.GetTeamByGroup(context.Background(), tc.code)
 			if err != nil {
 				assert.Equal(t, tc.expErr, err)
 			}

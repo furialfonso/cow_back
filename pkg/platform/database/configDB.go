@@ -2,8 +2,8 @@ package database
 
 import (
 	"context"
+	"cow_back/pkg/config"
 	"database/sql"
-	"docker-go-project/pkg/config"
 	"fmt"
 	"time"
 

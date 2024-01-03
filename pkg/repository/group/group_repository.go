@@ -2,9 +2,9 @@ package group
 
 import (
 	"context"
-	"docker-go-project/pkg/platform/database"
+	"cow_back/pkg/platform/database"
 
-	template "docker-go-project/pkg/platform/templates/group"
+	template "cow_back/pkg/platform/templates/group"
 	"fmt"
 )
 

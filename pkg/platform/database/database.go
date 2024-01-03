@@ -1,8 +1,8 @@
 package database
 
 import (
+	sql2 "cow_back/pkg/platform/sql"
 	"database/sql"
-	sql2 "docker-go-project/pkg/platform/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 )

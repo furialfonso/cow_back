@@ -22,8 +22,13 @@ func (_m *ITeamHandler) DecomposeTeam(c *gin.Context) {
 	_m.Called(c)
 }
 
-// GetUsersByGroup provides a mock function with given fields: c
-func (_m *ITeamHandler) GetUsersByGroup(c *gin.Context) {
+// GetTeamByGroup provides a mock function with given fields: c
+func (_m *ITeamHandler) GetTeamByGroup(c *gin.Context) {
+	_m.Called(c)
+}
+
+// GetTeamsByUser provides a mock function with given fields: c
+func (_m *ITeamHandler) GetTeamsByUser(c *gin.Context) {
 	_m.Called(c)
 }
 

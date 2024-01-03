@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	group "docker-go-project/pkg/repository/group"
+	group "cow_back/pkg/repository/group"
 
 	mock "github.com/stretchr/testify/mock"
 )

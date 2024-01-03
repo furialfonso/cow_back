@@ -1,8 +1,8 @@
 package main
 
 import (
-	"docker-go-project/api/dependencies"
-	"docker-go-project/api/server"
+	"cow_back/api/dependencies"
+	"cow_back/api/server"
 
 	"github.com/gin-gonic/gin"
 )

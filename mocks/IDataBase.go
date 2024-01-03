@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	sql "docker-go-project/pkg/platform/sql"
+	sql "cow_back/pkg/platform/sql"
 
 	mock "github.com/stretchr/testify/mock"
 )

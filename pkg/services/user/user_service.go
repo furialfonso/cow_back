@@ -2,9 +2,9 @@ package user
 
 import (
 	"context"
-	"docker-go-project/pkg/config"
-	"docker-go-project/pkg/platform/cache"
-	"docker-go-project/pkg/platform/restful"
+	"cow_back/pkg/config"
+	"cow_back/pkg/platform/cache"
+	"cow_back/pkg/platform/restful"
 	"encoding/json"
 	"fmt"
 )

@@ -1,19 +1,19 @@
 package dependencies
 
 import (
-	"docker-go-project/api/handlers"
-	groupHandler "docker-go-project/api/handlers/group"
-	teamHandler "docker-go-project/api/handlers/team"
-	"docker-go-project/api/jobs"
-	"docker-go-project/api/server"
-	"docker-go-project/pkg/platform/cache"
-	"docker-go-project/pkg/platform/database"
-	"docker-go-project/pkg/platform/restful"
-	groupRepository "docker-go-project/pkg/repository/group"
-	teamRepository "docker-go-project/pkg/repository/team"
-	groupService "docker-go-project/pkg/services/group"
-	teamService "docker-go-project/pkg/services/team"
-	"docker-go-project/pkg/services/user"
+	"cow_back/api/handlers"
+	groupHandler "cow_back/api/handlers/group"
+	teamHandler "cow_back/api/handlers/team"
+	"cow_back/api/jobs"
+	"cow_back/api/server"
+	"cow_back/pkg/platform/cache"
+	"cow_back/pkg/platform/database"
+	"cow_back/pkg/platform/restful"
+	groupRepository "cow_back/pkg/repository/group"
+	teamRepository "cow_back/pkg/repository/team"
+	groupService "cow_back/pkg/services/group"
+	teamService "cow_back/pkg/services/team"
+	"cow_back/pkg/services/user"
 
 	"go.uber.org/dig"
 )

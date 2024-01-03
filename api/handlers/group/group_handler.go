@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"docker-go-project/api/dto/request"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/pkg/services/group"
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/pkg/services/group"
 	"fmt"
 	"net/http"
 

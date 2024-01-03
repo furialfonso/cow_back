@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	cache "docker-go-project/pkg/platform/cache"
+	cache "cow_back/pkg/platform/cache"
 
 	mock "github.com/stretchr/testify/mock"
 )

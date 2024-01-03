@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"bytes"
-	"docker-go-project/api/dto/request"
-	"docker-go-project/api/dto/response"
-	"docker-go-project/mocks"
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
 	"encoding/json"
 	"errors"
 	"io"
