@@ -16,6 +16,8 @@ services:
       test: "mariadb --host=localhost --user=${APPLICATION_NAME}_R --password=${DB_ROOT_PASSWORD} -e 'SELECT 1;'"
       interval: 1s
       retries: 120
+    networks:
+      - cownetwork
   api:
     depends_on:
       db:
@@ -35,3 +37,9 @@ services:
     ports:
       - ${APP_PORT}:${APP_PORT}
     restart: always
+    networks:
+      - cownetwork
+
+networks:
+  cownetwork:
+    external: true

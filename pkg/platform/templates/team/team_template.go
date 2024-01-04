@@ -3,8 +3,8 @@ package team
 var (
 	GetTeamByGroup = `
 		select b.user_id
-		from cow_local_db.c_group a,
-					cow_local_db.c_team b
+		from c_group a,
+				 c_team b
 		where b.group_id = a.id
 		and a.code = ?
 	`
@@ -14,8 +14,8 @@ var (
 		       b.code,
            b.debt,
 					 b.created_at 
-		from cow_local_db.c_team a,
-     		 cow_local_db.c_group b
+		from c_team a,
+     		 c_group b
 		where a.user_id = ?
 	`
 
