@@ -34,7 +34,7 @@ func Test_UserLoad(t *testing.T) {
 				func(f *mockUserService) {
 					users := []cache.User{}
 					b, _ := json.Marshal(users)
-					f.restfulService.Mock.On("Get", mock.Anything, "http://localhost:9002/users", "5s").Return(b, errors.New("some error"))
+					f.restfulService.Mock.On("Get", mock.Anything, mock.Anything, "5s").Return(b, errors.New("some error"))
 				},
 			},
 			expErr: errors.New("some error"),
@@ -53,7 +53,7 @@ func Test_UserLoad(t *testing.T) {
 						},
 					}
 					b, _ := json.Marshal(users)
-					f.restfulService.Mock.On("Get", mock.Anything, "http://localhost:9002/users", "5s").Return(b, nil)
+					f.restfulService.Mock.On("Get", mock.Anything, mock.Anything, "5s").Return(b, nil)
 					f.userCache.Mock.On("Set", "1234", cache.User{
 						ID:       "1234",
 						Name:     "test",
