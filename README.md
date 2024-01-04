@@ -1,4 +1,4 @@
-# cow_back
+# cow_api
 
 It is a 3-tier based architecture with dependency injection.
 
@@ -11,12 +11,12 @@ It is a 3-tier based architecture with dependency injection.
   - *Gin*: framework for rest applications.
   - *Mokery*: automatic mocks for unit tests.
   - *Dig*: automatic dependency injection.
-  - *Docker*: application's contenerization
+  - *Docker*: application's contenerization.
 
 **Run unit tests**
   - execute tests
   ```
-    export CONFIG_DIR=${workspaceRoot}/cow_back/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
+    export CONFIG_DIR=$(pwd)/pkg/config && export SCOPE=local && go test -v ./... -covermode=atomic -coverprofile=coverage.out -coverpkg=./... -count=1
   ```
   - Look result in html
   ```
@@ -46,6 +46,13 @@ It is a 3-tier based architecture with dependency injection.
     - Windows:
     ```
       docker run -v $PWD:/src -w /src vektra/mockery --all
+    ```
+  - Sort app
+    ```
+      fieldalignment -fix ./...
+    ```
+    ```
+      gofumpt -l -w .
     ```
   
 **Dig**

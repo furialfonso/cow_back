@@ -2,11 +2,12 @@ package user
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+
 	"cow_back/pkg/config"
 	"cow_back/pkg/platform/cache"
 	"cow_back/pkg/platform/restful"
-	"encoding/json"
-	"fmt"
 )
 
 const (
@@ -23,7 +24,8 @@ type userService struct {
 }
 
 func NewUserService(restfulService restful.IRestfulService,
-	userCache cache.ICache) IUserService {
+	userCache cache.ICache,
+) IUserService {
 	return &userService{
 		restfulService: restfulService,
 		userCache:      userCache,

@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"bytes"
-	"cow_back/api/dto/request"
-	"cow_back/api/dto/response"
-	"cow_back/mocks"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -27,8 +28,8 @@ type groupMocks struct {
 
 func Test_GetAll(t *testing.T) {
 	tests := []struct {
-		name    string
 		mocks   groupMocks
+		name    string
 		expCode int
 	}{
 		{
@@ -72,9 +73,9 @@ func Test_GetAll(t *testing.T) {
 
 func Test_GetByCode(t *testing.T) {
 	tests := []struct {
+		mocks   groupMocks
 		name    string
 		code    string
-		mocks   groupMocks
 		expCode int
 	}{
 		{
@@ -133,9 +134,9 @@ func Test_GetByCode(t *testing.T) {
 
 func Test_Create(t *testing.T) {
 	tests := []struct {
-		name    string
 		input   interface{}
 		mocks   groupMocks
+		name    string
 		expCode int
 	}{
 		{
@@ -198,9 +199,9 @@ func Test_Create(t *testing.T) {
 
 func Test_Delete(t *testing.T) {
 	tests := []struct {
+		mocks   groupMocks
 		name    string
 		code    string
-		mocks   groupMocks
 		expCode int
 	}{
 		{

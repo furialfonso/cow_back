@@ -4,9 +4,7 @@ import (
 	"sync"
 )
 
-var (
-	cacheMap = sync.Map{}
-)
+var cacheMap = sync.Map{}
 
 type ICache interface {
 	Set(key string, user User)

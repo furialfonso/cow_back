@@ -5,5 +5,4 @@ api/main.go
 mocks/**
 pkg/config/**
 pkg/platform/**
-pkg/repository/**
 scripts/**

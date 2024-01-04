@@ -2,10 +2,11 @@ package group
 
 import (
 	"context"
+	"fmt"
+
 	"cow_back/pkg/platform/database"
 
 	template "cow_back/pkg/platform/templates/group"
-	"fmt"
 )
 
 type IGroupRepository interface {

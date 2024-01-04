@@ -2,12 +2,13 @@ package group
 
 import (
 	"context"
+	"errors"
+	"testing"
+
 	"cow_back/api/dto/request"
 	"cow_back/api/dto/response"
 	"cow_back/mocks"
 	"cow_back/pkg/repository/group"
-	"errors"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -23,10 +24,10 @@ type groupMocks struct {
 
 func Test_GetAll(t *testing.T) {
 	tests := []struct {
-		name   string
-		mocks  groupMocks
-		outPut []response.GroupResponse
 		expErr error
+		mocks  groupMocks
+		name   string
+		outPut []response.GroupResponse
 	}{
 		{
 			name: "error get groups",
@@ -85,11 +86,11 @@ func Test_GetAll(t *testing.T) {
 
 func Test_GetByCode(t *testing.T) {
 	tests := []struct {
+		expErr error
+		mocks  groupMocks
 		name   string
 		code   string
-		mocks  groupMocks
 		outPut response.GroupResponse
-		expErr error
 	}{
 		{
 			name: "error get groups",
@@ -137,10 +138,10 @@ func Test_GetByCode(t *testing.T) {
 
 func Test_Create(t *testing.T) {
 	tests := []struct {
+		expErr error
+		mocks  groupMocks
 		name   string
 		input  request.GroupRequest
-		mocks  groupMocks
-		expErr error
 	}{
 		{
 			name: "error",
@@ -180,12 +181,13 @@ func Test_Create(t *testing.T) {
 		})
 	}
 }
+
 func Test_Delete(t *testing.T) {
 	tests := []struct {
+		expErr error
+		mocks  groupMocks
 		name   string
 		input  string
-		mocks  groupMocks
-		expErr error
 	}{
 		{
 			name:  "error",
@@ -224,10 +226,10 @@ func Test_Delete(t *testing.T) {
 
 func Test_UpdateDebtByCode(t *testing.T) {
 	tests := []struct {
+		expErr error
+		mocks  groupMocks
 		name   string
 		input  request.GroupRequest
-		mocks  groupMocks
-		expErr error
 	}{
 		{
 			name: "error",

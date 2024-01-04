@@ -1,11 +1,12 @@
 package handlers
 
 import (
+	"fmt"
+	"net/http"
+
 	"cow_back/api/dto/request"
 	"cow_back/api/dto/response"
 	"cow_back/pkg/services/group"
-	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )

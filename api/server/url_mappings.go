@@ -1,11 +1,12 @@
 package server
 
 import (
+	"sync"
+
 	"cow_back/api/handlers"
 	groupHandler "cow_back/api/handlers/group"
 	teamHandler "cow_back/api/handlers/team"
 	"cow_back/api/jobs"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,8 @@ type Router struct {
 func NewRouter(pingHandler handlers.IPingHandler,
 	groupHandler groupHandler.IGroupHandler,
 	teamHandler teamHandler.ITeamHandler,
-	job jobs.IJob) *Router {
+	job jobs.IJob,
+) *Router {
 	return &Router{
 		pingHandler,
 		groupHandler,

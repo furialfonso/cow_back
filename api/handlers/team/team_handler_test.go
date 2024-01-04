@@ -2,15 +2,16 @@ package team
 
 import (
 	"bytes"
-	"cow_back/api/dto/request"
-	"cow_back/api/dto/response"
-	"cow_back/mocks"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"cow_back/api/dto/request"
+	"cow_back/api/dto/response"
+	"cow_back/mocks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert"
@@ -27,9 +28,9 @@ type teamMocks struct {
 
 func Test_GetTeamByGroup(t *testing.T) {
 	tests := []struct {
+		mocks   teamMocks
 		name    string
 		code    string
-		mocks   teamMocks
 		expCode int
 	}{
 		{
@@ -99,10 +100,10 @@ func Test_GetTeamByGroup(t *testing.T) {
 
 func Test_ComposeTeam(t *testing.T) {
 	tests := []struct {
-		name        string
-		code        string
 		teamRequest interface{}
 		mocks       teamMocks
+		name        string
+		code        string
 		expCode     int
 	}{
 		{
@@ -181,10 +182,10 @@ func Test_ComposeTeam(t *testing.T) {
 
 func Test_Decompose(t *testing.T) {
 	tests := []struct {
-		name        string
-		code        string
 		teamRequest interface{}
 		mocks       teamMocks
+		name        string
+		code        string
 		expCode     int
 	}{
 		{

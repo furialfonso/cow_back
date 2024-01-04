@@ -2,6 +2,7 @@ package team
 
 import (
 	"context"
+
 	"cow_back/pkg/platform/database"
 	template "cow_back/pkg/platform/templates/team"
 	"cow_back/pkg/repository/group"
@@ -60,7 +61,6 @@ func (tr *teamRepository) GetTeamsByUser(ctx context.Context, code string) ([]gr
 		groups = append(groups, group)
 	}
 	return groups, nil
-
 }
 
 func (tr *teamRepository) ExistUserInTeam(ctx context.Context, id string) (bool, error) {

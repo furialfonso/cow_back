@@ -2,10 +2,11 @@ package database
 
 import (
 	"context"
-	"cow_back/pkg/config"
 	"database/sql"
 	"fmt"
 	"time"
+
+	"cow_back/pkg/config"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -33,7 +34,6 @@ func newConfigDB(nameDB string, action string) *sql.DB {
 		AllowNativePasswords: true,
 	}
 	pool, err := sql.Open(driver, cfg.FormatDSN())
-
 	if err != nil {
 		panic(err)
 	}

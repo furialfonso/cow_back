@@ -2,12 +2,13 @@ package team
 
 import (
 	"context"
+	"fmt"
+
 	"cow_back/api/dto/request"
 	"cow_back/api/dto/response"
 	"cow_back/pkg/platform/cache"
 	"cow_back/pkg/repository/group"
 	"cow_back/pkg/repository/team"
-	"fmt"
 
 	"github.com/google/logger"
 )
@@ -27,7 +28,8 @@ type teamService struct {
 
 func NewTeamService(groupRepository group.IGroupRepository,
 	teamRepository team.ITeamRepository,
-	userCache cache.ICache) ITeamService {
+	userCache cache.ICache,
+) ITeamService {
 	return &teamService{
 		groupRepository: groupRepository,
 		teamRepository:  teamRepository,

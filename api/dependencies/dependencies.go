@@ -18,9 +18,7 @@ import (
 	"go.uber.org/dig"
 )
 
-var (
-	countErrors int = 0
-)
+var countErrors int = 0
 
 func BuildDependencies() *dig.Container {
 	Container := dig.New()

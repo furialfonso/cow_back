@@ -2,6 +2,7 @@ package group
 
 import (
 	"context"
+
 	"cow_back/api/dto/request"
 	"cow_back/api/dto/response"
 	"cow_back/pkg/repository/group"
@@ -70,7 +71,6 @@ func (gs *groupService) UpdateDebtByCode(ctx context.Context, groupRequest reque
 		Code: groupRequest.Code,
 		Debt: groupRequest.Debt,
 	})
-
 	if err != nil {
 		return err
 	}

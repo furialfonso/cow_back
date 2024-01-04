@@ -2,10 +2,11 @@ package jobs
 
 import (
 	"context"
-	"cow_back/pkg/config"
-	"cow_back/pkg/services/user"
 	"fmt"
 	"time"
+
+	"cow_back/pkg/config"
+	"cow_back/pkg/services/user"
 
 	"github.com/go-co-op/gocron"
 )

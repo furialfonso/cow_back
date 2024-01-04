@@ -1,10 +1,11 @@
 package team
 
 import (
+	"net/http"
+
 	"cow_back/api/dto/request"
 	"cow_back/api/dto/response"
 	"cow_back/pkg/services/team"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )

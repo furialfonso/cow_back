@@ -27,7 +27,7 @@ services:
     environment:
       CONFIG_DIR: /app
       SCOPE: ${SCOPE}
-      PORT: ${APP_PORT}
+      PORT: ${DEFAULT_PORT}
       GIN_MODE: release
     build:
       context: .
@@ -35,7 +35,7 @@ services:
         - SCOPE=${SCOPE}
       dockerfile: ./Dockerfile
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${APP_PORT}:${DEFAULT_PORT}
     restart: always
     networks:
       - cownetwork

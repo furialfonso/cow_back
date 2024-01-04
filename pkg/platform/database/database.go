@@ -1,8 +1,9 @@
 package database
 
 import (
-	sql2 "cow_back/pkg/platform/sql"
 	"database/sql"
+
+	sql2 "cow_back/pkg/platform/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -13,9 +14,9 @@ type IDataBase interface {
 }
 
 type dataBase struct {
-	nameDB string
 	conR   *sql.DB
 	conW   *sql.DB
+	nameDB string
 }
 
 func NewDataBase(nameDB string) IDataBase {
