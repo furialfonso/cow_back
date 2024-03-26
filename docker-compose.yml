@@ -35,7 +35,7 @@ services:
         - SCOPE=${SCOPE}
       dockerfile: ./Dockerfile
     ports:
-      - ${APP_PORT}:${DEFAULT_PORT}
+      - ${API_PORT}:${DEFAULT_PORT}
     restart: always
     networks:
       - cownetwork
