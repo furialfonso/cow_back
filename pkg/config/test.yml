@@ -6,7 +6,7 @@ mysql:
   host: cow_test_db
   schema: cow_test_db
 users-api:
-  url: http://cow_sso_test_api:8080
+  url: http://cow_sso_api_test:8080
   timeout: 5s
 job:
   users:
