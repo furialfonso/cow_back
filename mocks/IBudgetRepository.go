@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	model "shared-wallet-service/infrastructure/repositories/budget/model"
+	dto "shared-wallet-service/domain/budget/dto"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -14,12 +14,88 @@ type IBudgetRepository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: ctx, code
-func (_m *IBudgetRepository) Create(ctx context.Context, code string) (int64, error) {
+// Delete provides a mock function with given fields: ctx, code
+func (_m *IBudgetRepository) Delete(ctx context.Context, code string) error {
 	ret := _m.Called(ctx, code)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Create")
+		panic("no return value specified for Delete")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, code)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// GetAll provides a mock function with given fields: ctx
+func (_m *IBudgetRepository) GetAll(ctx context.Context) ([]dto.Budget, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAll")
+	}
+
+	var r0 []dto.Budget
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]dto.Budget, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []dto.Budget); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.Budget)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetByCode provides a mock function with given fields: ctx, code
+func (_m *IBudgetRepository) GetByCode(ctx context.Context, code string) (dto.Budget, error) {
+	ret := _m.Called(ctx, code)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetByCode")
+	}
+
+	var r0 dto.Budget
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (dto.Budget, error)); ok {
+		return rf(ctx, code)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) dto.Budget); ok {
+		r0 = rf(ctx, code)
+	} else {
+		r0 = ret.Get(0).(dto.Budget)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, code)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Insert provides a mock function with given fields: ctx, code
+func (_m *IBudgetRepository) Insert(ctx context.Context, code string) (int64, error) {
+	ret := _m.Called(ctx, code)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Insert")
 	}
 
 	var r0 int64
@@ -42,84 +118,8 @@ func (_m *IBudgetRepository) Create(ctx context.Context, code string) (int64, er
 	return r0, r1
 }
 
-// Delete provides a mock function with given fields: ctx, code
-func (_m *IBudgetRepository) Delete(ctx context.Context, code string) error {
-	ret := _m.Called(ctx, code)
-
-	if len(ret) == 0 {
-		panic("no return value specified for Delete")
-	}
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
-		r0 = rf(ctx, code)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// GetAll provides a mock function with given fields: ctx
-func (_m *IBudgetRepository) GetAll(ctx context.Context) ([]model.Budget, error) {
-	ret := _m.Called(ctx)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetAll")
-	}
-
-	var r0 []model.Budget
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]model.Budget, error)); ok {
-		return rf(ctx)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context) []model.Budget); ok {
-		r0 = rf(ctx)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]model.Budget)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetByCode provides a mock function with given fields: ctx, code
-func (_m *IBudgetRepository) GetByCode(ctx context.Context, code string) (model.Budget, error) {
-	ret := _m.Called(ctx, code)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetByCode")
-	}
-
-	var r0 model.Budget
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) (model.Budget, error)); ok {
-		return rf(ctx, code)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) model.Budget); ok {
-		r0 = rf(ctx, code)
-	} else {
-		r0 = ret.Get(0).(model.Budget)
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, code)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // UpdateDebtByCode provides a mock function with given fields: ctx, _a1
-func (_m *IBudgetRepository) UpdateDebtByCode(ctx context.Context, _a1 model.Budget) error {
+func (_m *IBudgetRepository) UpdateDebtByCode(ctx context.Context, _a1 dto.Budget) error {
 	ret := _m.Called(ctx, _a1)
 
 	if len(ret) == 0 {
@@ -127,7 +127,7 @@ func (_m *IBudgetRepository) UpdateDebtByCode(ctx context.Context, _a1 model.Bud
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, model.Budget) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, dto.Budget) error); ok {
 		r0 = rf(ctx, _a1)
 	} else {
 		r0 = ret.Error(0)
