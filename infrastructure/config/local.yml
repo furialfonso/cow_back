@@ -1,0 +1,17 @@
+name: LOCAL
+mysql:
+  user: cow
+  password: Admin123
+  port: 3306
+  host: localhost
+  schema: cow_local_db
+keycloak:
+  url: http://localhost:8080
+  timeout: 5s
+  client_id: cow
+  realm: SSO
+  client_secret: 7pljySAaUv7sgpJYpjJCwlIcMNxD2bBp
+job:
+  users:
+    active: true
+    expression: 0/1 * * * *

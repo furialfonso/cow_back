@@ -13,6 +13,105 @@ It is a 3-tier based architecture with dependency injection.
   - *Dig*: automatic dependency injection.
   - *Docker*: application's contenerization.
 
+```mermaid
+graph TB
+    User((External User))
+    KeycloakSystem[("Keycloak<br>Authentication System")]
+
+    subgraph "Shared Wallet Service"
+        subgraph "API Layer"
+            GinAPI["API Server<br>Gin Framework"]
+            Router["URL Router<br>Gin Router"]
+            
+            subgraph "API Handlers"
+                PingHandler["Ping Handler<br>Go"]
+                BudgetHandler["Budget Handler<br>Go"]
+                TeamHandler["Team Handler<br>Go"]
+            end
+        end
+
+        subgraph "Domain Layer"
+            subgraph "Services"
+                BudgetService["Budget Service<br>Go"]
+                TeamService["Team Service<br>Go"]
+                UserService["User Service<br>Go"]
+            end
+        end
+
+        subgraph "Infrastructure Layer"
+            subgraph "Database"
+                DBConnection["Database Connection<br>MySQL"]
+                ReadConn["Read Connection<br>MySQL"]
+                WriteConn["Write Connection<br>MySQL"]
+            end
+
+            subgraph "External Clients"
+                KeycloakClient["Keycloak Client<br>REST"]
+                RestClient["REST Client<br>Go HTTP"]
+            end
+
+            subgraph "Cache System"
+                CacheClient["Cache Client<br>Go"]
+                UserCache["User Cache<br>Go"]
+            end
+
+            subgraph "Repositories"
+                BudgetRepo["Budget Repository<br>Go"]
+                TeamRepo["Team Repository<br>Go"]
+                CacheRepo["Cache Repository<br>Go"]
+                KeycloakRepo["Keycloak Repository<br>Go"]
+            end
+
+            ConfigManager["Config Manager<br>YAML"]
+            JobHandler["Job Handler<br>Go"]
+        end
+
+        MariaDB[("MariaDB<br>Database")]
+    end
+
+    %% External connections
+    User -->|"HTTP Requests"| GinAPI
+    GinAPI -->|"Authenticates"| KeycloakSystem
+
+    %% API Layer connections
+    GinAPI -->|"Routes"| Router
+    Router -->|"Handles"| PingHandler
+    Router -->|"Handles"| BudgetHandler
+    Router -->|"Handles"| TeamHandler
+
+    %% Handler to Service connections
+    BudgetHandler -->|"Uses"| BudgetService
+    TeamHandler -->|"Uses"| TeamService
+
+    %% Service to Repository connections
+    BudgetService -->|"Uses"| BudgetRepo
+    TeamService -->|"Uses"| TeamRepo
+    UserService -->|"Uses"| KeycloakRepo
+
+    %% Repository to Infrastructure connections
+    BudgetRepo -->|"Reads/Writes"| DBConnection
+    TeamRepo -->|"Reads/Writes"| DBConnection
+    DBConnection -->|"Read Operations"| ReadConn
+    DBConnection -->|"Write Operations"| WriteConn
+    ReadConn -->|"Queries"| MariaDB
+    WriteConn -->|"Updates"| MariaDB
+
+    %% External client connections
+    KeycloakClient -->|"Authenticates"| KeycloakSystem
+    KeycloakClient -->|"Uses"| RestClient
+    KeycloakRepo -->|"Uses"| KeycloakClient
+
+    %% Cache connections
+    CacheClient -->|"Manages"| UserCache
+    CacheRepo -->|"Uses"| CacheClient
+    JobHandler -->|"Updates"| UserCache
+
+    %% Configuration
+    ConfigManager -.->|"Configures"| GinAPI
+    ConfigManager -.->|"Configures"| DBConnection
+    ConfigManager -.->|"Configures"| KeycloakClient
+```
+
 **Run unit tests**
   - execute tests
   ```

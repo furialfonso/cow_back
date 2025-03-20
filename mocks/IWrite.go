@@ -19,6 +19,10 @@ type IWrite struct {
 func (_m *IWrite) BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, error) {
 	ret := _m.Called(ctx, opts)
 
+	if len(ret) == 0 {
+		panic("no return value specified for BeginTx")
+	}
+
 	var r0 *sql.Tx
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, *sql.TxOptions) (*sql.Tx, error)); ok {
@@ -45,6 +49,10 @@ func (_m *IWrite) BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, er
 func (_m *IWrite) Commit(tx *sql.Tx) error {
 	ret := _m.Called(tx)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Commit")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(*sql.Tx) error); ok {
 		r0 = rf(tx)
@@ -61,6 +69,10 @@ func (_m *IWrite) ExecuteContext(ctx context.Context, query string, args ...inte
 	_ca = append(_ca, ctx, query)
 	_ca = append(_ca, args...)
 	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ExecuteContext")
+	}
 
 	var r0 sql.Result
 	var r1 error
@@ -87,6 +99,10 @@ func (_m *IWrite) ExecuteContext(ctx context.Context, query string, args ...inte
 // Rollback provides a mock function with given fields: tx
 func (_m *IWrite) Rollback(tx *sql.Tx) error {
 	ret := _m.Called(tx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Rollback")
+	}
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(*sql.Tx) error); ok {

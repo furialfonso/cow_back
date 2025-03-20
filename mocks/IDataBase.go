@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	sql "cow_back/pkg/platform/sql"
+	sql "shared-wallet-service/infrastructure/database/sql"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -13,9 +13,13 @@ type IDataBase struct {
 	mock.Mock
 }
 
-// GetRead provides a mock function with given fields:
+// GetRead provides a mock function with no fields
 func (_m *IDataBase) GetRead() sql.IRead {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRead")
+	}
 
 	var r0 sql.IRead
 	if rf, ok := ret.Get(0).(func() sql.IRead); ok {
@@ -29,9 +33,13 @@ func (_m *IDataBase) GetRead() sql.IRead {
 	return r0
 }
 
-// GetWrite provides a mock function with given fields:
+// GetWrite provides a mock function with no fields
 func (_m *IDataBase) GetWrite() sql.IWrite {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetWrite")
+	}
 
 	var r0 sql.IWrite
 	if rf, ok := ret.Get(0).(func() sql.IWrite); ok {

@@ -1,4 +1,4 @@
-module cow_back
+module shared-wallet-service
 
 go 1.20
 

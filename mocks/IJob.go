@@ -9,7 +9,7 @@ type IJob struct {
 	mock.Mock
 }
 
-// UserCache provides a mock function with given fields:
+// UserCache provides a mock function with no fields
 func (_m *IJob) UserCache() {
 	_m.Called()
 }

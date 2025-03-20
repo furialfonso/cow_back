@@ -3,29 +3,29 @@ package server
 import (
 	"sync"
 
-	"cow_back/api/handlers"
-	groupHandler "cow_back/api/handlers/group"
-	teamHandler "cow_back/api/handlers/team"
-	"cow_back/api/jobs"
+	"shared-wallet-service/infrastructure/jobs"
+	"shared-wallet-service/interfaces/handlers"
+	budgetHandler "shared-wallet-service/interfaces/handlers/budget"
+	teamHandler "shared-wallet-service/interfaces/handlers/team"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Router struct {
-	pingHandler  handlers.IPingHandler
-	groupHandler groupHandler.IGroupHandler
-	teamHandler  teamHandler.ITeamHandler
-	job          jobs.IJob
+	pingHandler   handlers.IPingHandler
+	budgetHandler budgetHandler.IBudgetHandler
+	teamHandler   teamHandler.ITeamHandler
+	job           jobs.IJob
 }
 
 func NewRouter(pingHandler handlers.IPingHandler,
-	groupHandler groupHandler.IGroupHandler,
+	budgetHandler budgetHandler.IBudgetHandler,
 	teamHandler teamHandler.ITeamHandler,
 	job jobs.IJob,
 ) *Router {
 	return &Router{
 		pingHandler,
-		groupHandler,
+		budgetHandler,
 		teamHandler,
 		job,
 	}
@@ -33,17 +33,17 @@ func NewRouter(pingHandler handlers.IPingHandler,
 
 func (r Router) Resource(gin *gin.Engine) {
 	gin.GET("/ping", r.pingHandler.Ping)
-	group := gin.Group("/groups")
+	budget := gin.Group("/budget")
 	{
-		group.GET("", r.groupHandler.GetAll)
-		group.GET("/:code", r.groupHandler.GetByCode)
-		group.POST("", r.groupHandler.Create)
-		group.DELETE("/:code", r.groupHandler.Delete)
+		budget.GET("", r.budgetHandler.GetAll)
+		budget.GET("/:code", r.budgetHandler.GetByCode)
+		budget.POST("", r.budgetHandler.Create)
+		budget.DELETE("/:code", r.budgetHandler.Delete)
 	}
 
 	team := gin.Group("/teams")
 	{
-		team.GET("/:code", r.teamHandler.GetTeamByGroup)
+		team.GET("/:code", r.teamHandler.GetTeamByBudget)
 		team.GET("/user/:userID", r.teamHandler.GetTeamsByUser)
 		team.POST("/:code", r.teamHandler.ComposeTeam)
 		team.DELETE("/:code", r.teamHandler.DecomposeTeam)

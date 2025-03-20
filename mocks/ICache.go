@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	cache "cow_back/pkg/platform/cache"
+	dto "shared-wallet-service/infrastructure/cache/dto"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -14,18 +14,22 @@ type ICache struct {
 }
 
 // Get provides a mock function with given fields: key
-func (_m *ICache) Get(key string) (cache.User, bool) {
+func (_m *ICache) Get(key string) (dto.User, bool) {
 	ret := _m.Called(key)
 
-	var r0 cache.User
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 dto.User
 	var r1 bool
-	if rf, ok := ret.Get(0).(func(string) (cache.User, bool)); ok {
+	if rf, ok := ret.Get(0).(func(string) (dto.User, bool)); ok {
 		return rf(key)
 	}
-	if rf, ok := ret.Get(0).(func(string) cache.User); ok {
+	if rf, ok := ret.Get(0).(func(string) dto.User); ok {
 		r0 = rf(key)
 	} else {
-		r0 = ret.Get(0).(cache.User)
+		r0 = ret.Get(0).(dto.User)
 	}
 
 	if rf, ok := ret.Get(1).(func(string) bool); ok {
@@ -38,18 +42,22 @@ func (_m *ICache) Get(key string) (cache.User, bool) {
 }
 
 // GetByNickName provides a mock function with given fields: nickName
-func (_m *ICache) GetByNickName(nickName string) (cache.User, bool) {
+func (_m *ICache) GetByNickName(nickName string) (dto.User, bool) {
 	ret := _m.Called(nickName)
 
-	var r0 cache.User
+	if len(ret) == 0 {
+		panic("no return value specified for GetByNickName")
+	}
+
+	var r0 dto.User
 	var r1 bool
-	if rf, ok := ret.Get(0).(func(string) (cache.User, bool)); ok {
+	if rf, ok := ret.Get(0).(func(string) (dto.User, bool)); ok {
 		return rf(nickName)
 	}
-	if rf, ok := ret.Get(0).(func(string) cache.User); ok {
+	if rf, ok := ret.Get(0).(func(string) dto.User); ok {
 		r0 = rf(nickName)
 	} else {
-		r0 = ret.Get(0).(cache.User)
+		r0 = ret.Get(0).(dto.User)
 	}
 
 	if rf, ok := ret.Get(1).(func(string) bool); ok {
@@ -62,7 +70,7 @@ func (_m *ICache) GetByNickName(nickName string) (cache.User, bool) {
 }
 
 // Set provides a mock function with given fields: key, user
-func (_m *ICache) Set(key string, user cache.User) {
+func (_m *ICache) Set(key string, user dto.User) {
 	_m.Called(key, user)
 }
 

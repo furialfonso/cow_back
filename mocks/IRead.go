@@ -22,6 +22,10 @@ func (_m *IRead) QueryContext(ctx context.Context, query string, args ...interfa
 	_ca = append(_ca, args...)
 	ret := _m.Called(_ca...)
 
+	if len(ret) == 0 {
+		panic("no return value specified for QueryContext")
+	}
+
 	var r0 *sql.Rows
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, string, ...interface{}) (*sql.Rows, error)); ok {
@@ -50,6 +54,10 @@ func (_m *IRead) QueryRowContext(ctx context.Context, query string, args ...inte
 	_ca = append(_ca, ctx, query)
 	_ca = append(_ca, args...)
 	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for QueryRowContext")
+	}
 
 	var r0 *sql.Row
 	if rf, ok := ret.Get(0).(func(context.Context, string, ...interface{}) *sql.Row); ok {
