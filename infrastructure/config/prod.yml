@@ -3,10 +3,10 @@ mysql:
   user: cow
   password: Admin123
   port: 3306
-  host: localhost
+  host: shared-wallet-service-db
   schema: shared-wallet-service-db
 keycloak:
-  url: http://localhost:8080
+  url: http://host.docker.internal:8080
   timeout: 5s
   client_id: cow
   realm: SSO

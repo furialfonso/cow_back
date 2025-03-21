@@ -1,18 +1,18 @@
 services:
   db:
-    container_name: ${APPLICATION_NAME}_${SCOPE}_db
+    container_name: ${APPLICATION_NAME}-db
     image: mariadb:jammy
     volumes:
       - ./infrastructure/database/migrations/db.sql:/docker-entrypoint-initdb.d/db.sql
       - ./infrastructure/database/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${APPLICATION_NAME}_${SCOPE}_db
+      MARIADB_DATABASE: ${APPLICATION_NAME}-db
     ports:
       - ${DB_PORT}:${DB_PORT}
     restart: always
     healthcheck:
-      test: "mariadb --host=localhost --user=${APPLICATION_NAME}_R --password=${DB_ROOT_PASSWORD} -e 'SELECT 1;'"
+      test: "mariadb --host=localhost --user=cow_R --password=${DB_ROOT_PASSWORD} -e 'SELECT 1;'"
       interval: 1s
       retries: 120
     networks:
@@ -21,12 +21,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    container_name: ${APPLICATION_NAME}_api_${SCOPE}
-    image: ${REPOSITORY}/${APPLICATION_NAME}_api:${SCOPE}
+    container_name: ${APPLICATION_NAME}
+    image: ${REPOSITORY}/${APPLICATION_NAME}:${SCOPE}
     environment:
       CONFIG_DIR: /app
       SCOPE: ${SCOPE}
-      PORT: ${DEFAULT_PORT}
+      PORT: ${INTERNAL_PORT}
       GIN_MODE: release
     build:
       context: .
@@ -34,7 +34,7 @@ services:
         - SCOPE=${SCOPE}
       dockerfile: ./Dockerfile
     ports:
-      - ${API_PORT}:${DEFAULT_PORT}
+      - ${EXTERNAL_PORT}:${INTERNAL_PORT}
     restart: always
     networks:
       - cownetwork
