@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	dto "shared-wallet-service/infrastructure/cache/dto"
+	dto "shared-wallet-service/domain/user/dto"
 
 	mock "github.com/stretchr/testify/mock"
 )

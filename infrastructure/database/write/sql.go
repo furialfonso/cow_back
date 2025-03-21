@@ -1,36 +1,20 @@
-package sql
+package write
 
 import (
 	"context"
 	"database/sql"
-)
 
-type read struct {
-	db *sql.DB
-}
+	iwrite "shared-wallet-service/infrastructure/database/interfaces/write"
+)
 
 type write struct {
 	db *sql.DB
 }
 
-func NewSqlRead(db *sql.DB) IRead {
-	return &read{
-		db: db,
-	}
-}
-
-func NewSqlWrite(db *sql.DB) IWrite {
+func NewSqlWrite(db *sql.DB) iwrite.IWrite {
 	return &write{
 		db: db,
 	}
-}
-
-func (r *read) QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
-	return r.db.QueryContext(ctx, query, args...)
-}
-
-func (r *read) QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row {
-	return r.db.QueryRowContext(ctx, query, args...)
 }
 
 func (w *write) ExecuteContext(ctx context.Context, query string, args ...any) (sql.Result, error) {

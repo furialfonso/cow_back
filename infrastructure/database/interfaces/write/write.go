@@ -1,14 +1,9 @@
-package sql
+package iwrite
 
 import (
 	"context"
 	"database/sql"
 )
-
-type IRead interface {
-	QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error)
-	QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row
-}
 
 type IWrite interface {
 	ExecuteContext(ctx context.Context, query string, args ...any) (sql.Result, error)

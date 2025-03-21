@@ -1,16 +1,17 @@
 package cache
 
 import (
-	"shared-wallet-service/infrastructure/cache/dto"
 	"sync"
+
+	"shared-wallet-service/infrastructure/cache/model"
 )
 
 var cacheMap = sync.Map{}
 
 type ICacheClient interface {
-	Set(key string, user dto.User)
-	Get(key string) (dto.User, bool)
-	GetByNickName(nickName string) (dto.User, bool)
+	Set(key string, user model.User)
+	Get(key string) (model.User, bool)
+	GetByNickName(nickName string) (model.User, bool)
 }
 
 type cacheClient struct{}
@@ -19,24 +20,24 @@ func NewCacheClient() ICacheClient {
 	return &cacheClient{}
 }
 
-func (u *cacheClient) Set(key string, user dto.User) {
+func (u *cacheClient) Set(key string, user model.User) {
 	cacheMap.Store(key, user)
 }
 
-func (u *cacheClient) Get(key string) (dto.User, bool) {
+func (u *cacheClient) Get(key string) (model.User, bool) {
 	value, exists := cacheMap.Load(key)
 	if !exists {
-		return dto.User{}, false
+		return model.User{}, false
 	}
-	return value.(dto.User), true
+	return value.(model.User), true
 }
 
-func (u *cacheClient) GetByNickName(nickName string) (dto.User, bool) {
-	var user dto.User
+func (u *cacheClient) GetByNickName(nickName string) (model.User, bool) {
+	var user model.User
 	var exists bool
 	cacheMap.Range(func(key, value any) bool {
-		if value.(dto.User).NickName == nickName {
-			user = value.(dto.User)
+		if value.(model.User).NickName == nickName {
+			user = value.(model.User)
 			exists = true
 			return false
 		}

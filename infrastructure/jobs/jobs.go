@@ -19,11 +19,6 @@ type job struct {
 	userUseCase user.IUserUseCase
 }
 
-func InitLoadCacheHandler(userUseCase user.IUserUseCase) error {
-	ctx := context.Background()
-	return userUseCase.UserLoad(ctx)
-}
-
 func NewJobHandler(userUseCase user.IUserUseCase) IJob {
 	return &job{
 		userUseCase: userUseCase,

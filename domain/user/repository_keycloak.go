@@ -2,7 +2,8 @@ package user
 
 import (
 	"context"
-	"shared-wallet-service/infrastructure/cache/dto"
+
+	"shared-wallet-service/domain/user/dto"
 )
 
 type IKeycloakRepository interface {

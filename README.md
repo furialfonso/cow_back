@@ -16,100 +16,103 @@ It is a 3-tier based architecture with dependency injection.
 ```mermaid
 graph TB
     User((External User))
-    KeycloakSystem[("Keycloak<br>Authentication System")]
+    KeycloakAuth((Keycloak Auth))
 
     subgraph "Shared Wallet Service"
         subgraph "API Layer"
-            GinAPI["API Server<br>Gin Framework"]
-            Router["URL Router<br>Gin Router"]
+            APIServer["API Server<br>Gin/Go"]
             
             subgraph "API Handlers"
                 PingHandler["Ping Handler<br>Go"]
                 BudgetHandler["Budget Handler<br>Go"]
                 TeamHandler["Team Handler<br>Go"]
             end
+
+            subgraph "URL Router"
+                GinRouter["Router<br>Gin"]
+            end
+        end
+
+        subgraph "Use Cases"
+            BudgetUseCase["Budget Use Case<br>Go"]
+            TeamUseCase["Team Use Case<br>Go"]
+            UserUseCase["User Use Case<br>Go"]
         end
 
         subgraph "Domain Layer"
-            subgraph "Services"
-                BudgetService["Budget Service<br>Go"]
-                TeamService["Team Service<br>Go"]
-                UserService["User Service<br>Go"]
-            end
+            BudgetDomain["Budget Domain<br>Go"]
+            TeamDomain["Team Domain<br>Go"]
+            UserDomain["User Domain<br>Go"]
         end
 
-        subgraph "Infrastructure Layer"
+        subgraph "Infrastructure"
             subgraph "Database"
-                DBConnection["Database Connection<br>MySQL"]
-                ReadConn["Read Connection<br>MySQL"]
-                WriteConn["Write Connection<br>MySQL"]
-            end
-
-            subgraph "External Clients"
-                KeycloakClient["Keycloak Client<br>REST"]
-                RestClient["REST Client<br>Go HTTP"]
+                MariaDB[("MariaDB<br>MariaDB")]
+                DBReader["DB Reader<br>Go SQL"]
+                DBWriter["DB Writer<br>Go SQL"]
             end
 
             subgraph "Cache System"
                 CacheClient["Cache Client<br>Go"]
-                UserCache["User Cache<br>Go"]
+                InMemoryCache[("In-Memory Cache<br>Go Sync.Map")]
             end
 
-            subgraph "Repositories"
-                BudgetRepo["Budget Repository<br>Go"]
-                TeamRepo["Team Repository<br>Go"]
-                CacheRepo["Cache Repository<br>Go"]
-                KeycloakRepo["Keycloak Repository<br>Go"]
+            subgraph "External Clients"
+                KeycloakClient["Keycloak Client<br>Go"]
+                RestClient["REST Client<br>Go"]
             end
 
-            ConfigManager["Config Manager<br>YAML"]
-            JobHandler["Job Handler<br>Go"]
+            subgraph "Jobs"
+                JobHandler["Job Handler<br>Go"]
+                CacheLoader["Cache Loader<br>Go"]
+            end
         end
-
-        MariaDB[("MariaDB<br>Database")]
     end
 
     %% External connections
-    User -->|"HTTP Requests"| GinAPI
-    GinAPI -->|"Authenticates"| KeycloakSystem
+    User -->|"HTTP Requests"| APIServer
+    APIServer -->|"Authenticates"| KeycloakAuth
+    KeycloakClient -->|"Fetches Users"| KeycloakAuth
 
     %% API Layer connections
-    GinAPI -->|"Routes"| Router
-    Router -->|"Handles"| PingHandler
-    Router -->|"Handles"| BudgetHandler
-    Router -->|"Handles"| TeamHandler
+    APIServer -->|"Routes"| GinRouter
+    GinRouter -->|"Handles"| PingHandler
+    GinRouter -->|"Handles"| BudgetHandler
+    GinRouter -->|"Handles"| TeamHandler
 
-    %% Handler to Service connections
-    BudgetHandler -->|"Uses"| BudgetService
-    TeamHandler -->|"Uses"| TeamService
+    %% Handler to Use Case connections
+    BudgetHandler -->|"Uses"| BudgetUseCase
+    TeamHandler -->|"Uses"| TeamUseCase
+    JobHandler -->|"Uses"| UserUseCase
 
-    %% Service to Repository connections
-    BudgetService -->|"Uses"| BudgetRepo
-    TeamService -->|"Uses"| TeamRepo
-    UserService -->|"Uses"| KeycloakRepo
+    %% Use Case to Domain connections
+    BudgetUseCase -->|"Uses"| BudgetDomain
+    TeamUseCase -->|"Uses"| TeamDomain
+    UserUseCase -->|"Uses"| UserDomain
 
-    %% Repository to Infrastructure connections
-    BudgetRepo -->|"Reads/Writes"| DBConnection
-    TeamRepo -->|"Reads/Writes"| DBConnection
-    DBConnection -->|"Read Operations"| ReadConn
-    DBConnection -->|"Write Operations"| WriteConn
-    ReadConn -->|"Queries"| MariaDB
-    WriteConn -->|"Updates"| MariaDB
+    %% Domain to Infrastructure connections
+    BudgetDomain -->|"Reads/Writes"| DBReader
+    BudgetDomain -->|"Reads/Writes"| DBWriter
+    TeamDomain -->|"Reads/Writes"| DBReader
+    TeamDomain -->|"Reads/Writes"| DBWriter
+    UserDomain -->|"Caches"| CacheClient
 
-    %% External client connections
-    KeycloakClient -->|"Authenticates"| KeycloakSystem
+    %% Infrastructure internal connections
+    DBReader -->|"Queries"| MariaDB
+    DBWriter -->|"Updates"| MariaDB
+    CacheClient -->|"Stores"| InMemoryCache
+    JobHandler -->|"Manages"| CacheLoader
+    CacheLoader -->|"Updates"| CacheClient
     KeycloakClient -->|"Uses"| RestClient
-    KeycloakRepo -->|"Uses"| KeycloakClient
 
-    %% Cache connections
-    CacheClient -->|"Manages"| UserCache
-    CacheRepo -->|"Uses"| CacheClient
-    JobHandler -->|"Updates"| UserCache
-
-    %% Configuration
-    ConfigManager -.->|"Configures"| GinAPI
-    ConfigManager -.->|"Configures"| DBConnection
-    ConfigManager -.->|"Configures"| KeycloakClient
+    %% Style definitions
+    classDef container fill:#e6e6e6,stroke:#333,stroke-width:2px
+    classDef component fill:#fff,stroke:#333,stroke-width:1px
+    classDef external fill:#d7d7d7,stroke:#333,stroke-width:2px
+    
+    class APIServer,Database container
+    class PingHandler,BudgetHandler,TeamHandler,GinRouter,BudgetUseCase,TeamUseCase,UserUseCase,KeycloakClient,RestClient,JobHandler,CacheLoader component
+    class User,KeycloakAuth external
 ```
 
 **Run unit tests**

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	"shared-wallet-service/domain/user"
 )
 
@@ -20,7 +21,8 @@ type userUseCase struct {
 }
 
 func NewUserUseCase(keycloakRepository user.IKeycloakRepository,
-	cacheRepository user.ICacheRepository) IUserUseCase {
+	cacheRepository user.ICacheRepository,
+) IUserUseCase {
 	return &userUseCase{
 		keycloakRepository: keycloakRepository,
 		cacheRepository:    cacheRepository,

@@ -7,6 +7,7 @@ import (
 	"shared-wallet-service/domain/budget"
 	"shared-wallet-service/domain/team"
 	"shared-wallet-service/domain/team/dto"
+
 	"shared-wallet-service/domain/user"
 
 	"shared-wallet-service/interfaces/dto/request"

@@ -1,8 +1,6 @@
 package user
 
-import (
-	"shared-wallet-service/infrastructure/cache/dto"
-)
+import "shared-wallet-service/domain/user/dto"
 
 type ICacheRepository interface {
 	SaveUser(user dto.User)

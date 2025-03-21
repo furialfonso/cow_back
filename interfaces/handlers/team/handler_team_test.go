@@ -19,7 +19,7 @@ import (
 )
 
 type mockTeamHandler struct {
-	teamService *mocks.ITeamService
+	teamService *mocks.ITeamUseCase
 }
 
 type teamMocks struct {
@@ -78,7 +78,7 @@ func Test_GetTeamByBudget(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockTeamHandler{
-				&mocks.ITeamService{},
+				&mocks.ITeamUseCase{},
 			}
 			tc.mocks.teamHandler(ms)
 			handler := NewTeamHandler(ms.teamService)
@@ -159,7 +159,7 @@ func Test_ComposeTeam(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockTeamHandler{
-				&mocks.ITeamService{},
+				&mocks.ITeamUseCase{},
 			}
 			tc.mocks.teamHandler(ms)
 			handler := NewTeamHandler(ms.teamService)
@@ -241,7 +241,7 @@ func Test_Decompose(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockTeamHandler{
-				&mocks.ITeamService{},
+				&mocks.ITeamUseCase{},
 			}
 			tc.mocks.teamHandler(ms)
 			handler := NewTeamHandler(ms.teamService)

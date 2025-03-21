@@ -1,9 +1,16 @@
 package dependencies
 
 import (
+	"context"
+	"log"
+	"time"
+
+	"shared-wallet-service/infrastructure/database/connections"
+	iread "shared-wallet-service/infrastructure/database/interfaces/read"
+	iwrite "shared-wallet-service/infrastructure/database/interfaces/write"
 	repositoryBudget "shared-wallet-service/infrastructure/repositories/budget"
-	repositoryCache "shared-wallet-service/infrastructure/repositories/cache"
-	repositoryKeycloak "shared-wallet-service/infrastructure/repositories/keycloak"
+	repositoryUser "shared-wallet-service/infrastructure/repositories/user"
+
 	repositoryTeam "shared-wallet-service/infrastructure/repositories/team"
 	"shared-wallet-service/interfaces/handlers"
 	handlerBudget "shared-wallet-service/interfaces/handlers/budget"
@@ -14,7 +21,7 @@ import (
 
 	"shared-wallet-service/api/server"
 	"shared-wallet-service/infrastructure/cache"
-	"shared-wallet-service/infrastructure/database"
+
 	"shared-wallet-service/infrastructure/external/keycloak"
 	"shared-wallet-service/infrastructure/external/restful"
 	"shared-wallet-service/infrastructure/jobs"
@@ -23,42 +30,65 @@ import (
 	"go.uber.org/dig"
 )
 
-var countErrors int = 0
-
 func BuildDependencies() *dig.Container {
-	Container := dig.New()
-	_ = Container.Provide(server.New)
-	_ = Container.Provide(server.NewRouter)
-	_ = Container.Provide(func() database.IDataBase {
-		return database.NewDataBase("mysql")
-	})
-	_ = Container.Provide(handlers.NewHandlerPing)
-	_ = Container.Provide(handlerBudget.NewBudgetHandler)
-	_ = Container.Provide(useCaseBudget.NewBudgetUseCase)
-	_ = Container.Provide(repositoryBudget.NewBudgetRepository)
+	container := dig.New()
+	registerProviders(container, getProviders())
+	ctx := context.Background()
+	initializeCacheHandler(ctx, container)
+	return container
+}
 
-	_ = Container.Provide(handlerTeam.NewTeamHandler)
-	_ = Container.Provide(useCaseTeam.NewTeamUseCase)
-	_ = Container.Provide(repositoryTeam.NewTeamRepository)
-
-	_ = Container.Provide(jobs.NewJobHandler)
-	_ = Container.Provide(useCaseUser.NewUserUseCase)
-
-	_ = Container.Provide(repositoryKeycloak.NewKeycloakRepository)
-	_ = Container.Provide(keycloak.NewKeycloakClient)
-
-	_ = Container.Provide(repositoryCache.NewCacheRepository)
-	_ = Container.Provide(cache.NewCacheClient)
-
-	_ = Container.Provide(restful.NewRestClient)
-
-	if err := Container.Invoke(jobs.InitLoadCacheHandler); err != nil {
-		countErrors++
-		if countErrors == 3 {
-			panic(err)
-		}
-		BuildDependencies()
+func getProviders() []any {
+	return []any{
+		server.New,
+		server.NewRouter,
+		func() iread.IReadDataBase {
+			return connections.NewReadDataBase("mysql")
+		},
+		func() iwrite.IWriteDataBase {
+			return connections.NewWriteDataBase("mysql")
+		},
+		handlers.NewHandlerPing,
+		handlerBudget.NewBudgetHandler,
+		useCaseBudget.NewBudgetUseCase,
+		repositoryBudget.NewBudgetRepository,
+		handlerTeam.NewTeamHandler,
+		useCaseTeam.NewTeamUseCase,
+		repositoryTeam.NewTeamRepository,
+		jobs.NewJobHandler,
+		useCaseUser.NewUserUseCase,
+		repositoryUser.NewKeycloakRepository,
+		keycloak.NewKeycloakClient,
+		repositoryUser.NewCacheRepository,
+		cache.NewCacheClient,
+		restful.NewRestClient,
 	}
+}
 
-	return Container
+func registerProviders(container *dig.Container, providers []any) {
+	for _, provider := range providers {
+		if err := container.Provide(provider); err != nil {
+			log.Fatalf("Critical error providing dependency: %v", err)
+		}
+	}
+}
+
+func initializeCacheHandler(ctx context.Context, container *dig.Container) {
+	for retries := 0; retries < 3; retries++ {
+		if err := container.Invoke(func(userUseCase useCaseUser.IUserUseCase) error {
+			return initializeUserCache(ctx, userUseCase)
+		}); err != nil {
+			log.Printf("Error invoking InitLoadCacheHandler (attempt %d): %v", retries+1, err)
+			if retries == 2 {
+				log.Fatalf("Critical error initializing cache handler after 3 attempts: %v", err)
+			}
+			time.Sleep(2 * time.Second)
+			continue
+		}
+		break
+	}
+}
+
+func initializeUserCache(ctx context.Context, userUseCase useCaseUser.IUserUseCase) error {
+	return userUseCase.UserLoad(ctx)
 }

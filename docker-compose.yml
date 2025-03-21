@@ -3,8 +3,8 @@ services:
     container_name: ${APPLICATION_NAME}_${SCOPE}_db
     image: mariadb:jammy
     volumes:
-      - ./scripts/db.sql:/docker-entrypoint-initdb.d/db.sql
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./infrastructure/database/migrations/db.sql:/docker-entrypoint-initdb.d/db.sql
+      - ./infrastructure/database/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${APPLICATION_NAME}_${SCOPE}_db

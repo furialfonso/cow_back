@@ -1,10 +1,11 @@
-package repositories
+package user
 
 import (
 	"context"
 
 	"shared-wallet-service/domain/user"
-	"shared-wallet-service/infrastructure/cache/dto"
+	"shared-wallet-service/domain/user/dto"
+
 	"shared-wallet-service/infrastructure/external/keycloak"
 )
 

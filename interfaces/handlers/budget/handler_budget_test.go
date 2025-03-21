@@ -19,7 +19,7 @@ import (
 )
 
 type mockBudgetHandler struct {
-	budgetService *mocks.IBudgetService
+	budgetService *mocks.IBudgetUseCase
 }
 
 type budgetMocks struct {
@@ -54,7 +54,7 @@ func Test_GetAll(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockBudgetHandler{
-				&mocks.IBudgetService{},
+				&mocks.IBudgetUseCase{},
 			}
 			tc.mocks.budgetHandler(ms)
 			handler := NewBudgetHandler(ms.budgetService)
@@ -112,7 +112,7 @@ func Test_GetByCode(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockBudgetHandler{
-				&mocks.IBudgetService{},
+				&mocks.IBudgetUseCase{},
 			}
 			tc.mocks.budgetHandler(ms)
 			handler := NewBudgetHandler(ms.budgetService)
@@ -179,7 +179,7 @@ func Test_Create(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockBudgetHandler{
-				&mocks.IBudgetService{},
+				&mocks.IBudgetUseCase{},
 			}
 			tc.mocks.budgetHandler(ms)
 			handler := NewBudgetHandler(ms.budgetService)
@@ -235,7 +235,7 @@ func Test_Delete(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			ms := &mockBudgetHandler{
-				&mocks.IBudgetService{},
+				&mocks.IBudgetUseCase{},
 			}
 			tc.mocks.budgetHandler(ms)
 			handler := NewBudgetHandler(ms.budgetService)

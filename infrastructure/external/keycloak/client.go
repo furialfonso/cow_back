@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"shared-wallet-service/infrastructure/config"
 	"shared-wallet-service/infrastructure/external/keycloak/dto"
 	"shared-wallet-service/infrastructure/external/restful"
@@ -76,7 +77,6 @@ func (k *keycloakClient) GetUser(ctx context.Context, token string) ([]dto.UserR
 	}
 
 	resp, err := k.restClient.Get(ctx, url, timeOut, headers)
-
 	if err != nil {
 		fmt.Println("error consuming users api")
 		return userResponse, err

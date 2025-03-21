@@ -3,27 +3,33 @@ package team
 import (
 	"context"
 
-	"shared-wallet-service/infrastructure/database"
-	query "shared-wallet-service/infrastructure/database/queries/team"
+	iread "shared-wallet-service/infrastructure/database/interfaces/read"
+	iwrite "shared-wallet-service/infrastructure/database/interfaces/write"
+	"shared-wallet-service/infrastructure/database/queries"
+	"shared-wallet-service/infrastructure/repositories/budget/model"
 
-	"shared-wallet-service/domain/budget/dto"
-	dto2 "shared-wallet-service/domain/team/dto"
+	dtoBudget "shared-wallet-service/domain/budget/dto"
+	dtoUser "shared-wallet-service/domain/team/dto"
 
 	"shared-wallet-service/domain/team"
 )
 
 type teamRepository struct {
-	db database.IDataBase
+	readDataBase  iread.IReadDataBase
+	writeDataBase iwrite.IWriteDataBase
 }
 
-func NewTeamRepository(db database.IDataBase) team.ITeamRepository {
+func NewTeamRepository(readDataBase iread.IReadDataBase,
+	writeDataBase iwrite.IWriteDataBase,
+) team.ITeamRepository {
 	return &teamRepository{
-		db: db,
+		readDataBase:  readDataBase,
+		writeDataBase: writeDataBase,
 	}
 }
 
 func (tr *teamRepository) GetTeamByBudget(ctx context.Context, code string) ([]string, error) {
-	rs, err := tr.db.GetRead().QueryContext(ctx, query.GetTeamByBudget, code)
+	rs, err := tr.readDataBase.Read().QueryContext(ctx, queries.GetTeamByBudget, code)
 	if err != nil {
 		return nil, err
 	}
@@ -38,29 +44,29 @@ func (tr *teamRepository) GetTeamByBudget(ctx context.Context, code string) ([]s
 	return users, nil
 }
 
-func (tr *teamRepository) GetTeamsByUser(ctx context.Context, code string) ([]dto.Budget, error) {
-	rs, err := tr.db.GetRead().QueryContext(ctx, query.GetTeamsByUser, code)
+func (tr *teamRepository) GetTeamsByUser(ctx context.Context, code string) ([]dtoBudget.Budget, error) {
+	rs, err := tr.readDataBase.Read().QueryContext(ctx, queries.GetTeamsByUser, code)
 	if err != nil {
 		return nil, err
 	}
-	var budgets []dto.Budget
+	var budgets []dtoBudget.Budget
 	for rs.Next() {
-		var budget dto.Budget
+		var budgetModel model.Budget
 		if err := rs.Scan(
-			&budget.ID,
-			&budget.Code,
-			&budget.Debt,
-			&budget.CreatedAt,
+			&budgetModel.ID,
+			&budgetModel.Code,
+			&budgetModel.Debt,
+			&budgetModel.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
-		budgets = append(budgets, budget)
+		budgets = append(budgets, budgetModel.ModelToDto())
 	}
 	return budgets, nil
 }
 
 func (tr *teamRepository) ExistUserInTeam(ctx context.Context, id string) (bool, error) {
-	rs, err := tr.db.GetRead().QueryContext(ctx, query.GetUserByID, id)
+	rs, err := tr.readDataBase.Read().QueryContext(ctx, queries.GetUserByID, id)
 	if err != nil {
 		return false, err
 	}
@@ -72,16 +78,16 @@ func (tr *teamRepository) ExistUserInTeam(ctx context.Context, id string) (bool,
 	return exist, nil
 }
 
-func (tr *teamRepository) ComposeTeam(ctx context.Context, teamModel dto2.Team) (int64, error) {
-	rs, err := tr.db.GetWrite().ExecuteContext(ctx, query.ComposeTeam, teamModel.BudgetID, teamModel.UserID)
+func (tr *teamRepository) ComposeTeam(ctx context.Context, teamModel dtoUser.Team) (int64, error) {
+	rs, err := tr.writeDataBase.Write().ExecuteContext(ctx, queries.ComposeTeam, teamModel.BudgetID, teamModel.UserID)
 	if err != nil {
 		return 0, err
 	}
 	return rs.LastInsertId()
 }
 
-func (tr *teamRepository) DecomposeTeam(ctx context.Context, teamModel dto2.Team) error {
-	_, err := tr.db.GetWrite().ExecuteContext(ctx, query.DecomposeTeam, teamModel.BudgetID, teamModel.UserID)
+func (tr *teamRepository) DecomposeTeam(ctx context.Context, teamModel dtoUser.Team) error {
+	_, err := tr.writeDataBase.Write().ExecuteContext(ctx, queries.DecomposeTeam, teamModel.BudgetID, teamModel.UserID)
 	if err != nil {
 		return err
 	}

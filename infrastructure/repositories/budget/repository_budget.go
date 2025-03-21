@@ -4,68 +4,75 @@ import (
 	"context"
 	"fmt"
 
-	"shared-wallet-service/infrastructure/database"
-
 	"shared-wallet-service/domain/budget"
 	"shared-wallet-service/domain/budget/dto"
-
-	query "shared-wallet-service/infrastructure/database/queries/budget"
+	iread "shared-wallet-service/infrastructure/database/interfaces/read"
+	iwrite "shared-wallet-service/infrastructure/database/interfaces/write"
+	"shared-wallet-service/infrastructure/database/queries"
+	"shared-wallet-service/infrastructure/repositories/budget/model"
 )
 
 type budgetRepository struct {
-	db database.IDataBase
+	readDataBase  iread.IReadDataBase
+	writeDataBase iwrite.IWriteDataBase
 }
 
-func NewBudgetRepository(db database.IDataBase) budget.IBudgetRepository {
+func NewBudgetRepository(readDataBase iread.IReadDataBase,
+	writeDataBase iwrite.IWriteDataBase,
+) budget.IBudgetRepository {
 	return &budgetRepository{
-		db: db,
+		readDataBase:  readDataBase,
+		writeDataBase: writeDataBase,
 	}
 }
 
 func (gr *budgetRepository) GetAll(ctx context.Context) ([]dto.Budget, error) {
 	var budgets []dto.Budget
-	rs, err := gr.db.GetRead().QueryContext(ctx, query.GetAll)
+	rs, err := gr.readDataBase.Read().QueryContext(ctx, queries.GetAll)
 	if err != nil {
 		return budgets, err
 	}
 	for rs.Next() {
-		var budget dto.Budget
+		var budgetModel model.Budget
 		if err := rs.Scan(
-			&budget.ID,
-			&budget.Code,
-			&budget.Debt,
-			&budget.CreatedAt,
+			&budgetModel.ID,
+			&budgetModel.Code,
+			&budgetModel.Debt,
+			&budgetModel.CreatedAt,
 		); err != nil {
 			return budgets, err
 		}
-		budgets = append(budgets, budget)
+		budgets = append(budgets, budgetModel.ModelToDto())
 	}
 	return budgets, nil
 }
 
 func (gr *budgetRepository) GetByCode(ctx context.Context, code string) (dto.Budget, error) {
-	var budgetModel dto.Budget
-	rs, err := gr.db.GetRead().QueryContext(ctx, query.GetByCode, code)
+	var budgetDTO dto.Budget
+	rs, err := gr.readDataBase.Read().QueryContext(ctx, queries.GetByCode, code)
 	if err != nil {
-		return budgetModel, err
+		return budgetDTO, err
 	}
 	exists := rs.Next()
 	if !exists {
-		return budgetModel, fmt.Errorf("budget %s not found", code)
+		return budgetDTO, fmt.Errorf("budget %s not found", code)
 	}
+
+	var budgetModel model.Budget
 	if err := rs.Scan(
 		&budgetModel.ID,
 		&budgetModel.Code,
 		&budgetModel.Debt,
 		&budgetModel.CreatedAt,
 	); err != nil {
-		return budgetModel, err
+		return budgetDTO, err
 	}
-	return budgetModel, nil
+
+	return budgetModel.ModelToDto(), nil
 }
 
 func (gr *budgetRepository) Insert(ctx context.Context, code string) (int64, error) {
-	rs, err := gr.db.GetWrite().ExecuteContext(ctx, query.Create, code)
+	rs, err := gr.writeDataBase.Write().ExecuteContext(ctx, queries.Create, code)
 	if err != nil {
 		return 0, err
 	}
@@ -77,7 +84,7 @@ func (gr *budgetRepository) Insert(ctx context.Context, code string) (int64, err
 }
 
 func (gr *budgetRepository) Delete(ctx context.Context, code string) error {
-	_, err := gr.db.GetWrite().ExecuteContext(ctx, query.Delete, code)
+	_, err := gr.writeDataBase.Write().ExecuteContext(ctx, queries.Delete, code)
 	if err != nil {
 		return err
 	}
@@ -85,7 +92,7 @@ func (gr *budgetRepository) Delete(ctx context.Context, code string) error {
 }
 
 func (gr *budgetRepository) UpdateDebtByCode(ctx context.Context, budgetModel dto.Budget) error {
-	_, err := gr.db.GetWrite().ExecuteContext(ctx, query.Update, budgetModel.Debt, budgetModel.Code)
+	_, err := gr.writeDataBase.Write().ExecuteContext(ctx, queries.Update, budgetModel.Debt, budgetModel.Code)
 	if err != nil {
 		return err
 	}
